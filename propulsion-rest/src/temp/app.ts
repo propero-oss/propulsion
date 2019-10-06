@@ -1,16 +1,16 @@
-import {RequestHandler} from "@/decorators";
+import {RequestBody, RequestHandler} from "@/decorators";
 import {Controller} from "@/decorators/controller";
 import {getRestApp} from "@/express";
 import {NextFunction, Request, Response} from "@/types";
-import express from "express";
 
+import express from "express";
 
 @Controller("/api")
 export class SomeController {
 
   @RequestHandler({path: "/me1", method: "GET"})
   private getUserInfo(req: Request, res: Response, next: NextFunction) {
-    console.log("me1");
+    console.log(req.body);
     res.json({ hello: "world" });
   }
 
@@ -21,8 +21,9 @@ export class SomeController {
     },
     method: "PUT"
   })
+  @RequestBody("json")
   private updateUserInfo(req: Request, res: Response, next: NextFunction) {
-    console.log("me1");
+    console.log(req.body);
     res.json({ hello: "world" });
   }
 
@@ -34,7 +35,7 @@ export class SomeController {
     method: ["POST", "delete"]
   })
   private updateUserInfo2(req: Request, res: Response, next: NextFunction) {
-    console.log("me2");
+    console.log(req.body);
     res.json({ hello: "world" });
   }
 
@@ -51,16 +52,11 @@ export class SomeController {
     }
   })
   private updateUserInfo3(req: Request, res: Response, next: NextFunction) {
-    console.log("me4");
+    console.log(req.body);
     res.json({ hello: "world" });
   }
 }
 
-process.env.DEBUG = "express:*";
-/*
-const app = express();
-app.all("/", getRestApp());
-*/
 getRestApp().listen(3000, () => console.log(`http://localhost:3000/`));
 
 

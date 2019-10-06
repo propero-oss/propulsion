@@ -1,4 +1,4 @@
-import {createMethodCondition, normalizeRequestHeaders, normalizeRequestMethods, optimizeRequestHeaders} from "@/processors";
+import {createMethodCondition, normalizeRequestHeaders, normalizeRequestMethods, optimizeRequestHeaders} from "@/processor";
 import {ProcessedHandlerOptions, HandlerOptions} from "@/types/options/handler-options";
 
 export function normalizeOptions(options: HandlerOptions): ProcessedHandlerOptions {

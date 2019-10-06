@@ -1,6 +1,6 @@
 import {Controller} from "@/decorators/controller";
 import {REQUEST_HANDLER} from "@/meta";
-import {normalizeOptions} from "@/processors/options/normalize-options";
+import {normalizeOptions} from "@/processor/options/normalize-options";
 import {NextFunction, Request, Response} from "@/types";
 import {HandlerOptions} from "@/types/options/handler-options";
 import "reflect-metadata";
