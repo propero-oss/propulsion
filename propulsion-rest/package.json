@@ -1,0 +1,22 @@
+{
+  "name": "@propero/propulsion-rest",
+  "version": "0.0.0",
+  "description": "Propulsion Framework Rest",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "propero",
+    "propulsioon",
+    "framework"
+  ],
+  "author": "Propero Team <team@propero.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "@propero/propulsion-core": "file:../propulsion-core"
+  }
+}
