@@ -16,8 +16,10 @@
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
   "devDependencies": {
+    "reflect-metadata": "^0.1.13",
     "ttypescript": "^1.5.7",
     "typescript": "^3.6.3",
     "typescript-transform-paths": "^1.1.10"
-  }
+  },
+  "dependencies": {}
 }
