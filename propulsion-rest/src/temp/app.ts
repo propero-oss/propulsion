@@ -3,19 +3,20 @@ import {Controller} from "@/decorators/controller";
 import {getRestApp} from "@/express";
 import {NextFunction, Request, Response} from "@/types";
 
-import express from "express";
-
 @Controller("/api")
 export class SomeController {
 
-  @RequestHandler({path: "/me1", method: "GET"})
+  private me: any = {
+    hello: "world"
+  };
+
+  @RequestHandler({path: "/me", method: "GET"})
   private getUserInfo(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
-    res.json({ hello: "world" });
+    res.json(this.me);
   }
 
   @RequestHandler({
-    path: "/me2",
+    path: "/me",
     headers: {
       contentType: "application/json"
     },
@@ -23,8 +24,8 @@ export class SomeController {
   })
   @RequestBody("json")
   private updateUserInfo(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
-    res.json({ hello: "world" });
+    this.me = req.body;
+    res.json(this.me);
   }
 
   @RequestHandler({
@@ -57,4 +58,4 @@ export class SomeController {
   }
 }
 
-getRestApp().listen(3000, () => console.log(`http://localhost:3000/`));
+getRestApp().listen(3000, () => console.log(`https://localhost:3000/`));

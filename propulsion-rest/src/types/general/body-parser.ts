@@ -1,3 +1,3 @@
-import {NextFunction, Request, Response} from "@/types";
+import {MiddlewareFunction} from "@/express";
 
-export type BodyParser = (req: Request, res: Response, next: NextFunction) => any;
+export type BodyParser = MiddlewareFunction;
