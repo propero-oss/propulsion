@@ -1,12 +1,13 @@
-import {joinMiddleware, MiddlewareFunction} from "@/express";
+import {joinMiddleware} from "@/express";
 import {getParser} from "@/parser";
-import {Request, Response, NextFunction, BodyParser} from "@/types";
+import {BodyParser} from "@/types";
+import {TFunction} from "@propero/propulsion-core";
 
 
 export function RequestBody(parser: string | BodyParser) {
   const parse: BodyParser = typeof parser == "string" ? getParser(parser) : parser;
 
-  return function(target: any, key: string | symbol, desc: TypedPropertyDescriptor<MiddlewareFunction>) {
+  return function(target: any, key: string | symbol, desc: TypedPropertyDescriptor<TFunction>) {
     const { value: orig } = desc;
 
     desc.value = function(req, res, next) {

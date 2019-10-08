@@ -1,9 +1,8 @@
-import {Controller} from "@/decorators/controller";
 import {REQUEST_HANDLER} from "@/meta";
 import {normalizeOptions} from "@/processor/options/normalize-options";
-import {NextFunction, Request, Response} from "@/types";
-import {HandlerOptions} from "@/types/options/handler-options";
+import {HandlerOptions, NextFunction, Request, Response} from "@/types";
 import "reflect-metadata";
+import {TFunction} from "@propero/propulsion-core";
 
 
 
@@ -17,7 +16,7 @@ export function RequestHandler(options?: string | HandlerOptions) {
   const {headers, method} = normalized;
 
 
-  return function(target: any, key: string | symbol, desc: PropertyDescriptor) {
+  return function(target: any, key: string | symbol, desc: TypedPropertyDescriptor<TFunction>) {
     Reflect.defineMetadata(REQUEST_HANDLER, {options, normalized}, target, key);
     
     const {value: orig} = desc;
@@ -29,7 +28,7 @@ export function RequestHandler(options?: string | HandlerOptions) {
       if (headers && !headers(req.headers))
         return next();
 
-      return orig.apply(this, arguments);
+      return orig!.apply(this, arguments as any);
     };
 
     return desc;
