@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Propulsion Framework Core",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "gen:types": "node ./build/generate-types.js",
@@ -16,10 +17,11 @@
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
   "devDependencies": {
-    "reflect-metadata": "^0.1.13",
     "ttypescript": "^1.5.7",
     "typescript": "^3.6.3",
     "typescript-transform-paths": "^1.1.10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
 }

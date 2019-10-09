@@ -24,3 +24,9 @@ export function Document(data?: Omit<DocumentMeta, "fields">) {
 Document.getMeta = function<T extends NoArgsConstructor>(target: T): DocumentMeta<T> {
   return Reflect.getMetadata(DOCUMENT, target);
 };
+
+Document.create = function<T extends NoArgsConstructor>(cls: T, data?: Partial<InstanceType<T>>): InstanceType<T> {
+  const document = new cls();
+  Object.assign(document, data);
+  return document;
+};

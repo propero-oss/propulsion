@@ -1,23 +1,45 @@
-import {UserRepo} from "@/repo/user-repo";
+import {UserRepository} from "@/repo/user-repository";
 import {Inject} from "@propero/propulsion-core";
 import {RequestHandler, Controller, RequestBody, Request, Response, NextFunction, getRestApp} from "@propero/propulsion-rest";
 
+const ID = "me";
 
 
-
-@Controller("/api")
+@Controller("/api/users")
 export class SomeController {
 
   @Inject()
-  private repo!: UserRepo;
+  private repo!: UserRepository;
 
-  @RequestHandler({path: "/me", method: "GET"})
+  @RequestHandler({path: "/", method: "GET"})
+  private async getUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.json(await this.repo.findAll());
+    } catch (ex) {
+      next(ex);
+    }
+  }
+
+  @RequestHandler({path: "/count", method: "GET"})
+  private async getUserCount(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.json(await this.repo.count());
+    } catch (ex) {
+      next(ex);
+    }
+  }
+
+  @RequestHandler({path: "/:id", method: "GET"})
   private async getUserInfo(req: Request, res: Response, next: NextFunction) {
-    res.json(await this.repo.getMe());
+    try {
+      res.json(await this.repo.findOne(req.param("id", ID)));
+    } catch (ex) {
+      next(ex);
+    }
   }
 
   @RequestHandler({
-    path: "/me",
+    path: "/:id",
     headers: {
       contentType: "application/json"
     },
@@ -25,8 +47,11 @@ export class SomeController {
   })
   @RequestBody("json")
   private async updateUserInfo(req: Request, res: Response, next: NextFunction) {
-    await this.repo.setMe(req.body);
-    res.json(await this.repo.getMe());
+    try {
+      res.json(await this.repo.update(req.param("id", ID), req.body));
+    } catch (ex) {
+      next(ex);
+    }
   }
 }
 

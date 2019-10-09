@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ttsc && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "ttypescript": "^1.5.7",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "typescript-transform-paths": "^1.1.11"
   },
   "dependencies": {
     "@propero/propulsion-core": "file:../propulsion-core",

@@ -1,4 +1,4 @@
-export type TextOperator = "ct" | "nc" | "rx" | "ri" | "regex" | "sw" | "ew";
+export type TextOperator = "ct" | "nc" | "rx" | "ri" | "mt" | "sw" | "ew";
 
 
 export interface TextFilter<T, F extends keyof T> {
