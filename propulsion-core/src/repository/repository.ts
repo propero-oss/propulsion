@@ -1,4 +1,6 @@
+import {DocumentMeta} from "@/document";
 import {Sorter, Filter, SingleFetchOptions, FetchOptions} from "@/repository";
+import {NoArgsConstructor} from "@/types";
 
 export interface Repository<T, ID = string> {
     findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T>;
@@ -12,5 +14,8 @@ export interface Repository<T, ID = string> {
     update(id: ID, entity: Partial<T>, partialUpdate: boolean): Promise<T>;
 
     delete(id: ID): Promise<void>;
+
+    describe(): DocumentMeta<NoArgsConstructor<T>>;
+    type(): NoArgsConstructor<T>;
 }
 

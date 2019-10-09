@@ -1,4 +1,4 @@
-import {Document} from "@/document";
+import {Document, DocumentMeta} from "@/document";
 import {FetchOptions, Filter, Repository, SingleFetchOptions, Sorter} from "@/repository";
 import {NoArgsConstructor} from "@/types";
 
@@ -16,6 +16,9 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
     private cls: NoArgsConstructor<T>,
     private idField: keyof T
   ) {}
+
+  public type() { return this.cls; }
+  public describe() { return Document.getMeta(this.cls); }
 
   private state: Map<string, T> = new Map<string, T>();
 
