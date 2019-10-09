@@ -1,3 +1,5 @@
+import {Filter} from "@/repository";
+
 export type LogicalOperator = "and" | "or" | "not";
 
 
