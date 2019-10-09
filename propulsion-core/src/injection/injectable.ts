@@ -1,6 +1,6 @@
 import {getId, Injectables} from "@/injection";
 
-export function Injectable(id: any) {
+export function Injectable(id?: any) {
   return function(target: any) {
 
     if (!id)
@@ -17,7 +17,7 @@ export function Injectable(id: any) {
   }
 }
 
-export function MultiInjectable(id: any) {
+export function MultiInjectable(id?: any) {
   return function(target: any) {
 
     if (!id)

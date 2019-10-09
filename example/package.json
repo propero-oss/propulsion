@@ -1,0 +1,21 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ttypescript": "^1.5.7",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "@propero/propulsion-core": "file:../propulsion-core",
+    "@propero/propulsion-rest": "file:../propulsion-rest",
+    "express": "^4.17.1"
+  }
+}
