@@ -15,6 +15,7 @@
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^12.7.12",
     "ttypescript": "^1.5.7",
     "typescript": "^3.6.3",
     "typescript-transform-paths": "^1.1.10"
