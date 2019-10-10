@@ -15,12 +15,12 @@ export type TypeormExtraOptions<T> = {
   findMany?: FindManyOptions<T>;
 }
 
-export class TypeormRepository<T, ID extends (keyof T & string | number)> implements Repository<T, ID> {
+export class TypeormRepository<T, F extends keyof T, ID extends T[F]> implements Repository<T, F, ID> {
 
   constructor(
     private connection: () => Connection,
     private cls: NoArgsConstructor<T>,
-    private idField: ID,
+    private idField: F,
     private customRepository?: () => CustomRepository<T>,
     private extraOptions: TypeormExtraOptions<T> = {}
   ) {}

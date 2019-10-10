@@ -2,7 +2,7 @@ import {DocumentMeta} from "@/document";
 import {Sorter, Filter, SingleFetchOptions, FetchOptions} from "@/repository";
 import {NoArgsConstructor} from "@/types";
 
-export interface Repository<T, ID = string> {
+export interface Repository<T, F extends keyof T, ID extends T[F]> {
     findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T>;
 
     findAll(options?: FetchOptions<T>): Promise<T[]>;

@@ -10,24 +10,24 @@ function nextId() {
 }
 nextId.current = 0;
 
-export class MemoryMapRepository<T> implements Repository<T, string> {
+export class MemoryMapRepository<T, F extends keyof T, ID extends T[F]> implements Repository<T, F, ID> {
 
   constructor(
     private cls: NoArgsConstructor<T>,
-    private idField: keyof T
+    private idField: F
   ) {}
 
   public type() { return this.cls; }
   public describe() { return Document.getMeta(this.cls); }
 
-  private state: Map<string, T> = new Map<string, T>();
+  private state: Map<ID, T> = new Map<ID, T>();
 
   public async count(options?: FetchOptions<T>): Promise<number> {
     return (await this.findAll(options)).length;
   }
 
   public async create(entity: Partial<T>): Promise<T> {
-    const id = nextId();
+    const id = nextId() as any as ID;
     const created = Document.create(this.cls, {
       ...entity,
       [this.idField]: id
@@ -36,7 +36,7 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
     return created;
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(id: ID): Promise<void> {
     if (this.state.has(id))
       this.state.delete(id);
   }
@@ -56,7 +56,7 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
     return entries.slice(skip, top);
   }
 
-  public async findOne(id: string, options?: SingleFetchOptions<T>): Promise<T> {
+  public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
     let result = this.state.get(id);
     if (!result)
       throw new NoSuchElement();
@@ -67,7 +67,7 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
     return result;
   }
 
-  public async update(id: string, entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
+  public async update(id: ID, entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
     if (!this.state.has(id))
       throw new NoSuchElement();
 
