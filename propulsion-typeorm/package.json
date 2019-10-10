@@ -1,0 +1,27 @@
+{
+  "name": "@propero/propulsion-typeorm",
+  "version": "0.0.0",
+  "description": "TypeORM Repositories for Propulsion Framework",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "ttsc"
+  },
+  "keywords": [
+    "propero",
+    "propulsion",
+    "framework"
+  ],
+  "author": "Propero Team <team@propero.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "ttypescript": "^1.5.7",
+    "typescript": "^3.6.3",
+    "typescript-transform-paths": "^1.1.10"
+  },
+  "dependencies": {
+    "@propero/propulsion-core": "file:../propulsion-core",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.19"
+  }
+}

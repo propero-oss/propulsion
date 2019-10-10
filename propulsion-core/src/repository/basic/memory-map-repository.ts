@@ -1,5 +1,5 @@
-import {Document, DocumentMeta} from "@/document";
-import {FetchOptions, Filter, Repository, SingleFetchOptions, Sorter} from "@/repository";
+import {Document} from "@/document";
+import {FetchOptions, Filter, NoSuchElement, Repository, SingleFetchOptions, Sorter} from "@/repository";
 import {NoArgsConstructor} from "@/types";
 
 function nextId() {
@@ -59,7 +59,7 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
   public async findOne(id: string, options?: SingleFetchOptions<T>): Promise<T> {
     let result = this.state.get(id);
     if (!result)
-      throw new Error("No such entity");
+      throw new NoSuchElement();
 
     if (options && options.fields)
       [result] = this.transformFields([result], options.fields);
@@ -69,7 +69,7 @@ export class MemoryMapRepository<T> implements Repository<T, string> {
 
   public async update(id: string, entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
     if (!this.state.has(id))
-      throw new Error("No such entity");
+      throw new NoSuchElement();
 
     if (!partialUpdate) {
       this.state.set(id, Document.create(this.cls, {...entity, [this.idField]: id}));
