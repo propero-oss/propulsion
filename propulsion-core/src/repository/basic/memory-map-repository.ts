@@ -1,5 +1,5 @@
 import {Document} from "@/document";
-import {FetchOptions, Filter, NoSuchElement, Repository, SingleFetchOptions, Sorter} from "@/repository";
+import {FetchOptions, Filter, NoSuchElement, RepositoryBase, SingleFetchOptions, Sorter} from "@/repository";
 import {NoArgsConstructor} from "@/types";
 
 function nextId() {
@@ -10,35 +10,21 @@ function nextId() {
 }
 nextId.current = 0;
 
-export class MemoryMapRepository<T, F extends keyof T, ID extends T[F]> implements Repository<T, F, ID> {
+export class MemoryMapRepository<T, F extends keyof T, ID extends T[F]> extends RepositoryBase<T, F, ID> {
 
-  constructor(
-    private cls: NoArgsConstructor<T>,
-    private idField: F
-  ) {}
+  constructor(cls: NoArgsConstructor<T>, id: F) { super(cls, id); }
 
-  public type() { return this.cls; }
-  public describe() { return Document.getMeta(this.cls); }
+  protected state: Map<ID, T> = new Map<ID, T>();
 
-  private state: Map<ID, T> = new Map<ID, T>();
+  public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
+    let result = this.state.get(id);
+    if (!result)
+      throw new NoSuchElement();
 
-  public async count(options?: FetchOptions<T>): Promise<number> {
-    return (await this.findAll(options)).length;
-  }
+    if (options && options.fields)
+      [result] = this.transformFields([result], options.fields);
 
-  public async create(entity: Partial<T>): Promise<T> {
-    const id = nextId() as any as ID;
-    const created = Document.create(this.cls, {
-      ...entity,
-      [this.idField]: id
-    });
-    this.state.set(id, created);
-    return created;
-  }
-
-  public async delete(id: ID): Promise<void> {
-    if (this.state.has(id))
-      this.state.delete(id);
+    return result;
   }
 
   public async findAll(options?: FetchOptions<T>): Promise<T[]> {
@@ -56,53 +42,63 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F]> implemen
     return entries.slice(skip, top);
   }
 
-  public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
-    let result = this.state.get(id);
-    if (!result)
-      throw new NoSuchElement();
-
-    if (options && options.fields)
-      [result] = this.transformFields([result], options.fields);
-
-    return result;
+  public async count(options?: FetchOptions<T>): Promise<number> {
+    return (await this.findAll(this.fetchToCountOptions(options))).length;
   }
 
-  public async update(id: ID, entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
+
+  public async createOne(entity: Partial<T>): Promise<T> {
+    const id = nextId() as any as ID;
+    const created = Document.create(this.cls, {
+      ...entity,
+      [this.id]: id
+    });
+    this.state.set(id, created);
+    return created;
+  }
+
+  public async updateOne(entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
+    const id: ID = entity[this.id] as ID;
     if (!this.state.has(id))
       throw new NoSuchElement();
 
     if (!partialUpdate) {
-      this.state.set(id, Document.create(this.cls, {...entity, [this.idField]: id}));
+      this.state.set(id, Document.create(this.cls, {...entity, [this.id]: id}));
       return this.findOne(id);
     } else {
       const it = await this.findOne(id);
-      Object.assign(it, {...entity, [this.idField]: id});
+      Object.assign(it, {...entity, [this.id]: id});
       this.state.set(id, it);
       return it;
     }
   }
 
-  private sortEntries(entries: T[], sorters: Sorter<T> | Sorter<T>[]) {
+  public async deleteOne(id: ID): Promise<void> {
+    if (this.state.has(id))
+      this.state.delete(id);
+  }
+
+  protected sortEntries(entries: T[], sorters: Sorter<T> | Sorter<T>[]) {
     return entries.sort(this.createSorterFunction(Array.isArray(sorters) ? sorters : [sorters]));
   }
 
-  private transformFields(entries: T[], fields: (keyof T)[]): T[] {
+  protected transformFields(entries: T[], fields: (keyof T)[]): T[] {
     return entries.map(entry => fields.reduce((data, field) => ({...data, [field]: entry[field]}), {} as Partial<T>) as T);
   }
 
-  private filterEntries(entries: T[], filter: Filter<T> | Filter<T>[]) {
+  protected filterEntries(entries: T[], filter: Filter<T> | Filter<T>[]) {
     if (Array.isArray(filter)) filter = { op: "and", filters: filter };
     return entries.filter(this.createFilterFunction(filter));
   }
 
-  private createSorterFunction(sorters: Sorter<T, keyof T>[]) {
+  protected createSorterFunction(sorters: Sorter<T, keyof T>[]) {
     return sorters.map(sorter => (data1: T, data2: T) =>
       data1[sorter.field] > data2[sorter.field] ? sorter.ascending ? -1 : 1 :
       data1[sorter.field] < data2[sorter.field] ? sorter.ascending ? 1 : -1 : 0
     ).reduce((first, second) => (data1: T, data2: T) => first(data1, data2) || second(data1, data2));
   }
 
-  private createFilterFunction(filter: Filter<T, keyof T>): (data: T) => boolean {
+  protected createFilterFunction(filter: Filter<T, keyof T>): (data: T) => boolean {
     switch (filter.op) {
       case "and": return (data: T) => filter.filters.map(this.createFilterFunction.bind(this)).every(one => one(data));
       case "or":  return (data: T) => filter.filters.map(this.createFilterFunction.bind(this)).some(one => one(data));

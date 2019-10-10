@@ -4,10 +4,10 @@ import {
   FetchOptions, Filter,
   NoArgsConstructor,
   NoSuchElement,
-  Repository,
+  RepositoryBase,
   SingleFetchOptions, UnsupportedOperation
 } from "@propero/propulsion-core";
-import {Connection, Repository as CustomRepository} from "typeorm";
+import {Connection, Repository} from "typeorm";
 import {FindManyOptions, FindOneOptions} from "typeorm/browser";
 
 export type TypeormExtraOptions<T> = {
@@ -15,27 +15,25 @@ export type TypeormExtraOptions<T> = {
   findMany?: FindManyOptions<T>;
 }
 
-export class TypeormRepository<T, F extends keyof T, ID extends T[F]> implements Repository<T, F, ID> {
+export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends RepositoryBase<T, F, ID> {
 
   constructor(
-    private connection: () => Connection,
-    private cls: NoArgsConstructor<T>,
-    private idField: F,
-    private customRepository?: () => CustomRepository<T>,
-    private extraOptions: TypeormExtraOptions<T> = {}
-  ) {}
+    protected connection: () => Connection,
+    cls: NoArgsConstructor<T>,
+    id: F,
+    protected customRepository?: () => Repository<T>,
+    protected extraOptions: TypeormExtraOptions<T> = {}
+  ) { super(cls, id); }
 
-  private get repo() {
+  protected get repo(): Repository<T> {
     if (this.customRepository)
       return this.customRepository();
     return this.connection().getRepository(this.cls);
   }
 
-  public type(): NoArgsConstructor<T> { return this.cls; }
-  public describe(): DocumentMeta<NoArgsConstructor<T>> { return Document.getMeta(this.cls); }
-
 
   public async findAll(options?: FetchOptions<T>): Promise<T[]> {
+    // TODO: Fetch Options
     return await this.repo.find();
   }
 
@@ -50,39 +48,39 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> implements
     return this.repo.count(this.convertFetchOptions(options));
   }
 
-  public async create(entity: Partial<T>): Promise<T> {
+  public async createOne(entity: Partial<T>): Promise<T> {
     const instance = Document.create(this.cls, entity);
     return await this.repo.save(instance);
   }
 
-  public async update(id: ID, entity: Partial<T>, partialUpdate: boolean): Promise<T> {
+  public async updateOne(entity: Partial<T>, partialUpdate: boolean): Promise<T> {
     const update = Document.create(this.cls, entity);
-    const original = await this.findOne(id);
+    const original = await this.findOne(entity[this.id] as ID);
 
     if (partialUpdate)
       return await this.repo.save(this.repo.merge(original, update));
 
-    update[this.idField as keyof T] = original[this.idField as keyof T];
+    update[this.id] = original[this.id];
     return await this.repo.save(update);
   }
 
-  public async delete(id: ID): Promise<void> {
+  public async deleteOne(id: ID): Promise<void> {
     return this.repo.delete(id).then(() => undefined);
   }
 
-  private convertSingleFetchOptions(options?: SingleFetchOptions<T>): FindOneOptions<T> {
+  protected convertSingleFetchOptions(options?: SingleFetchOptions<T>): FindOneOptions<T> {
     const {fields: select} = {...options};
     return {select, ...this.extraOptions.findOne};
   }
 
-  private convertFetchOptions(options?: FetchOptions<T>): FindManyOptions<T> {
+  protected convertFetchOptions(options?: FetchOptions<T>): FindManyOptions<T> {
     let {top: take, skip, fields: select, filter: where} = {...options};
     if (where)
       where = this.convertFilters(Array.isArray(where) ? { op: "and", filters: where}: where);
     return {take, skip, select, where, ...this.extraOptions.findMany};
   }
 
-  private convertFilters(filter: Filter<T>): any {
+  protected convertFilters(filter: Filter<T>): any {
     // TODO Use Querybuilder
     throw new UnsupportedOperation("filtering is not yet supported");
   }
