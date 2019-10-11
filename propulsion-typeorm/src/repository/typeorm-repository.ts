@@ -154,7 +154,13 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
 
       case "and": return [new Brackets( q => filter.filters.map(this.buildWhere.bind(this)).forEach(([c, p]) => q.andWhere(c as any, p)))];
       case "or": return [new Brackets(q => filter.filters.map(this.buildWhere.bind(this)).forEach(([c, p]) => q.orWhere(c as any, p)))];
-      case "not": return [new Brackets(q => q.where("not :filter", {filter: this.buildWhere(filter.filter)}))];
+      case "not":
+        const qb = this.repo.createQueryBuilder().select("it");
+        const [c, p] = this.buildWhere(filter.filter);
+        new Brackets(q => q.where(c as any, p)).whereFactory(qb);
+        // Need to get access to where query to support filter negation
+        const subQuery = (qb as any).createWhereExpressionString();
+        return [(`not (${subQuery})`)];
 
       case "in": return [new Brackets(q => filter.items.forEach(item => q.orWhere(`it.${filter.field} = :item`, {item})))];
       case "ni": return [new Brackets(q => filter.items.forEach(item => q.andWhere(`it.${filter.field} != :item`, {item})))];

@@ -10,7 +10,7 @@ function nextId() {
 }
 nextId.current = 0;
 
-export class MemoryMapRepository<T, F extends keyof T, ID extends T[F]> extends RepositoryBase<T, F, ID> {
+export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> extends RepositoryBase<T, F, ID> {
 
   constructor(cls: NoArgsConstructor<T>, id: F) { super(cls, id); }
 
