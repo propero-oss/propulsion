@@ -1,5 +1,12 @@
-import {Filter} from "@/types/document/filter";
-import {Sorter} from "@/types/document/sorter";
+import {Filter, Sorter, ExcludeKeys, Simple, Single} from "@/types";
+
+export type RelationOption<T> = {
+  fields?: (keyof T)[];
+} | true;
+
+export type RelationOptions<T> = {
+  [K in ExcludeKeys<T, Simple>]?: RelationOption<Single<T[K]>>;
+};
 
 export interface FetchOptions<T = any> {
   filter?: Filter<T>[] | Filter<T>;
@@ -7,8 +14,10 @@ export interface FetchOptions<T = any> {
   top?: number;
   skip?: number;
   fields?: (keyof T)[];
+  relations?: RelationOptions<T>;
 }
 
 export interface SingleFetchOptions<T> {
   fields?: (keyof T)[];
+  relations?: RelationOptions<T>;
 }

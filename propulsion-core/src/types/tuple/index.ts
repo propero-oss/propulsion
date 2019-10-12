@@ -1,5 +1,6 @@
 import {TuplePushType, TupleShiftType, TuplePopType, TupleUnshiftType, TupleType} from "@/types/tuple/_generated";
 export * from "@/types/tuple/_generated";
+export * from "@/types/tuple/single";
 
 
 /**
