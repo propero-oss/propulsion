@@ -57,3 +57,4 @@ exclude_patterns:
   - "**/*polyfill*"
   - "*conf*"
   - "**/_*"
+  - "example/"
