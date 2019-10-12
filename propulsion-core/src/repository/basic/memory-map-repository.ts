@@ -1,6 +1,6 @@
-import {Document} from "@/document";
-import {FetchOptions, Filter, NoSuchElement, RepositoryBase, SingleFetchOptions, Sorter} from "@/repository";
-import {NoArgsConstructor} from "@/types";
+import {Document, Filters} from "@/document";
+import {FetchOptions, NoSuchElement, RepositoryBase, SingleFetchOptions, UnsupportedOperation} from "@/repository";
+import {Filter, NoArgsConstructor, Sorter} from "@/types";
 
 function nextId() {
   const date = ("000000000000"+(+new Date()).toString(16)).substr(-12);
@@ -19,7 +19,7 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
   public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
     let result = this.state.get(id);
     if (!result)
-      throw new NoSuchElement();
+      throw new NoSuchElement(`No element found for id ${id}`);
 
     if (options && options.fields)
       [result] = this.transformFields([result], options.fields);
@@ -60,7 +60,7 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
   public async updateOne(entity: Partial<T>, partialUpdate?: boolean): Promise<T> {
     const id: ID = entity[this.id] as ID;
     if (!this.state.has(id))
-      throw new NoSuchElement();
+      throw new NoSuchElement(`No element found for id ${id}`);
 
     if (!partialUpdate) {
       this.state.set(id, Document.create(this.cls, {...entity, [this.id]: id}));
@@ -98,35 +98,52 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
     ).reduce((first, second) => (data1: T, data2: T) => first(data1, data2) || second(data1, data2));
   }
 
+  protected createAndFunction(filters: Filter<T, keyof T>[]): (data: T) => boolean {
+    const fns = filters.map(this.createFilterFunction.bind(this));
+    return (data: T) => fns.every(one => one(data));
+  }
+
+  protected createOrFunction(filters: Filter<T, keyof T>[]): (data: T) => boolean {
+    const fns = filters.map(this.createFilterFunction.bind(this));
+    return (data: T) => fns.some(one => one(data));
+  }
+
   protected createFilterFunction(filter: Filter<T, keyof T>): (data: T) => boolean {
+
     switch (filter.op) {
-      case "and": return (data: T) => filter.filters.map(this.createFilterFunction.bind(this)).every(one => one(data));
-      case "or":  return (data: T) => filter.filters.map(this.createFilterFunction.bind(this)).some(one => one(data));
-      case "not": return (data: T) => !this.createFilterFunction(filter.filter)(data);
+      case "and":             return this.createAndFunction(filter.filters);
+      case "or":              return this.createOrFunction(filter.filters);
+      case "not":             return this.createFilterFunction(Filters.negate(filter.filter));
 
-      case "in": return (data: T) => filter.items.includes(data[filter.field]);
-      case "ni": return (data: T) => !filter.items.includes(data[filter.field]);
+      case "in":              return (data: T) => filter.items.includes(data[filter.field]);
+      case "not-in":          return (data: T) => !filter.items.includes(data[filter.field]);
 
-      case "nu": return (data: T) => data[filter.field] == null;
-      case "nn": return (data: T) => data[filter.field] != null;
+      case "null":            return (data: T) => data[filter.field] == null;
+      case "not-null":        return (data: T) => data[filter.field] != null;
 
-      case "eq": return (data: T) => data[filter.field] === filter.value;
-      case "ne": return (data: T) => data[filter.field] !== filter.value;
+      case "equals":          return (data: T) => data[filter.field] === filter.value;
+      case "not-equal":       return (data: T) => data[filter.field] !== filter.value;
 
-      case "gt": return (data: T) => data[filter.field] > filter.value;
-      case "ge": return (data: T) => data[filter.field] >= filter.value;
+      case "greater":         return (data: T) => data[filter.field] > filter.value;
+      case "greater-equals":  return (data: T) => data[filter.field] >= filter.value;
 
-      case "lt": return (data: T) => data[filter.field] < filter.value;
-      case "le": return (data: T) => data[filter.field] <= filter.value;
+      case "less":            return (data: T) => data[filter.field] < filter.value;
+      case "less-equals":     return (data: T) => data[filter.field] <= filter.value;
 
-      case "ct": return (data: T) => String(data[filter.field]).includes(String(filter.value));
-      case "nc": return (data: T) => !String(data[filter.field]).includes(String(filter.value));
-      case "sw": return (data: T) => String(data[filter.field]).startsWith(String(filter.value));
-      case "ew": return (data: T) => String(data[filter.field]).endsWith(String(filter.value));
-      case "mt": return (data: T) => new RegExp(String(filter.value)).test(String(data[filter.field]));
+      case "contains":        return (data: T) => String(data[filter.field]).includes(String(filter.value));
+      case "not-contains":    return (data: T) => !String(data[filter.field]).includes(String(filter.value));
+
+      case "starts-with":     return (data: T) => String(data[filter.field]).startsWith(String(filter.value));
+      case "not-starts-with": return (data: T) => !String(data[filter.field]).startsWith(String(filter.value));
+
+      case "ends-with":       return (data: T) => String(data[filter.field]).endsWith(String(filter.value));
+      case "not-ends-with":   return (data: T) => !String(data[filter.field]).endsWith(String(filter.value));
+
+      case "match":           return (data: T) => new RegExp(String(filter.value)).test(String(data[filter.field]));
+      case "not-match":       return (data: T) => !new RegExp(String(filter.value)).test(String(data[filter.field]));
 
       default:
-        throw new Error("Not yet implemented.");
+        throw new UnsupportedOperation(`${filter.op} filter operator not supported`);
     }
   }
 }

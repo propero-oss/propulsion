@@ -1,5 +1,5 @@
-import {Filter} from "@/repository/filter";
-import {Sorter} from "@/repository/sorter";
+import {Filter} from "@/types/document/filter";
+import {Sorter} from "@/types/document/sorter";
 
 export interface FetchOptions<T = any> {
   filter?: Filter<T>[] | Filter<T>;

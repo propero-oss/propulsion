@@ -1,9 +1,9 @@
 import {
   Document,
-  FetchOptions, Filter,
+  FetchOptions, Filter, Filters,
   NoArgsConstructor,
   NoSuchElement,
-  RepositoryBase,
+  RepositoryBase, SetFilter,
   SingleFetchOptions, Sorter, UnsupportedOperation
 } from "@propero/propulsion-core";
 import {Connection, Repository, Brackets, FindManyOptions, FindOneOptions, SelectQueryBuilder} from "typeorm";
@@ -149,39 +149,62 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     return {select, ...this.extraOptions.findOne};
   }
 
+  protected buildAndBracket(filters: Filter<T>[]): Brackets {
+    return new Brackets(q => filters
+      .map(this.buildWhere.bind(this))
+      .forEach(([condition, params]) => q.andWhere(condition as any, params))
+    );
+  }
+
+  protected buildOrBracket(filters: Filter<T>[]): Brackets {
+    return new Brackets(q => filters
+      .map(this.buildWhere.bind(this))
+      .forEach(([condition, params]) => q.orWhere(condition as any, params))
+    );
+  }
+
+  protected buildInBracket(filter: SetFilter<T>): Brackets {
+    const cond = `it.${filter.field} = :item`;
+    return new Brackets(q => filter.items
+      .forEach(item => q.orWhere(cond, {item}))
+    );
+  }
+
+  protected buildNotInBracket(filter: SetFilter<T>): Brackets {
+    const cond = `it.${filter.field} != :item`;
+    return new Brackets(q => filter.items
+      .forEach(item => q.andWhere(cond, {item}))
+    );
+  }
+
   protected buildWhere(filter: Filter<T>) : [string | Brackets, any?] {
     switch(filter.op) {
 
-      case "and": return [new Brackets( q => filter.filters.map(this.buildWhere.bind(this)).forEach(([c, p]) => q.andWhere(c as any, p)))];
-      case "or": return [new Brackets(q => filter.filters.map(this.buildWhere.bind(this)).forEach(([c, p]) => q.orWhere(c as any, p)))];
-      case "not":
-        const qb = this.repo.createQueryBuilder().select("it");
-        const [c, p] = this.buildWhere(filter.filter);
-        new Brackets(q => q.where(c as any, p)).whereFactory(qb);
-        // Need to get access to where query to support filter negation
-        const subQuery = (qb as any).createWhereExpressionString();
-        return [(`not (${subQuery})`)];
+      case "and":             return [this.buildAndBracket(filter.filters)];
+      case "or":              return [this.buildOrBracket(filter.filters)];
+      case "not":             return this.buildWhere(Filters.negate(filter.filter));
 
-      case "in": return [new Brackets(q => filter.items.forEach(item => q.orWhere(`it.${filter.field} = :item`, {item})))];
-      case "ni": return [new Brackets(q => filter.items.forEach(item => q.andWhere(`it.${filter.field} != :item`, {item})))];
+      case "in":              return [this.buildInBracket(filter)];
+      case "not-in":          return [this.buildNotInBracket(filter)];
 
-      case "nu": return [`it.${filter.field} = :null`, {null: null}];
-      case "nn": return [`it.${filter.field} != :null`, {null: null}];
+      case "null":            return [`it.${filter.field} = :null`, {null: null}];
+      case "not-null":        return [`it.${filter.field} != :null`, {null: null}];
 
-      case "eq": return [`it.${filter.field} = :value`, {value: filter.value}];
-      case "ne": return [`it.${filter.field} != :value`, {value: filter.value}];
+      case "equals":          return [`it.${filter.field} = :value`, {value: filter.value}];
+      case "not-equal":       return [`it.${filter.field} != :value`, {value: filter.value}];
 
-      case "gt": return [`it.${filter.field} > :value`, {value: filter.value}];
-      case "ge": return [`it.${filter.field} >= :value`, {value: filter.value}];
+      case "greater":         return [`it.${filter.field} > :value`, {value: filter.value}];
+      case "greater-equals":  return [`it.${filter.field} >= :value`, {value: filter.value}];
 
-      case "lt": return [`it.${filter.field} < :value`, {value: filter.value}];
-      case "le": return [`it.${filter.field} <= :value`, {value: filter.value}];
+      case "less":            return [`it.${filter.field} < :value`, {value: filter.value}];
+      case "less-equals":     return [`it.${filter.field} <= :value`, {value: filter.value}];
 
-      case "ct": return [`it.${filter.field} like :value`, {value: `%${filter.value}%`}];
-      case "nc": return [`it.${filter.field} not like :value`, {value: `%${filter.value}%`}];
-      case "sw": return [`it.${filter.field} like :value`, {value: `${filter.value}%`}];
-      case "ew": return [`it.${filter.field} like :value`, {value: `%${filter.value}`}];
-      case "mt": throw new UnsupportedOperation("regex match not supported");
+      case "contains":        return [`it.${filter.field} like :value`, {value: `%${filter.value}%`}];
+      case "not-contains":    return [`it.${filter.field} not like :value`, {value: `%${filter.value}%`}];
+      case "starts-with":     return [`it.${filter.field} like :value`, {value: `${filter.value}%`}];
+      case "not-starts-with": return [`it.${filter.field} not like :value`, {value: `${filter.value}%`}];
+      case "ends-with":       return [`it.${filter.field} like :value`, {value: `%${filter.value}`}];
+      case "not-ends-with":   return [`it.${filter.field} not like :value`, {value: `%${filter.value}`}];
 
       default: throw new UnsupportedOperation(`${filter.op} operator not supported`);
     }
