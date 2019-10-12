@@ -1,3 +1,3 @@
-import {ExcluideKeys} from "@/types/keys";
+import {ExcludeKeys} from "@/types/keys";
 
-export type ExxcludeMembers<T, M> = Pick<T, ExcludeKeys<T, M>>;
+export type ExcludeMembers<T, M> = Pick<T, ExcludeKeys<T, M>>;
