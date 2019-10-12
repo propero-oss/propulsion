@@ -10,7 +10,7 @@ export function createControllerRouter(cls: any, options: HandlerOptions, instan
   const router = Router();
   const {prototype} = cls;
   const handlerNames = Object.getOwnPropertyNames(prototype)
-    .filter(key => key != "constructor")
+    .filter(key => key !== "constructor")
     .filter(key => Reflect.hasMetadata(REQUEST_HANDLER, prototype, key));
 
   handlerNames.forEach(name => {

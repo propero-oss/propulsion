@@ -1,11 +1,11 @@
 import {getId, InjectableProperties} from "@/injection";
-import {NoArgsConstructor, NoArgsFunction, SingleArgFunction} from "@/types";
+import {Constructor, NoArgsConstructor, NoArgsFunction, SingleArgFunction} from "@/types";
 
 
 export class InjectableRegistry {
 
   private injectables: Record<any, InjectableProperties> = {};
-  private instances = new WeakMap<Function, any>();
+  private instances = new WeakMap<Constructor<any, any>, any>();
 
   public createGetter(target: any, key: string | symbol, dep: any) {
     const {passInstance} = this.getInjectableMeta(dep);
@@ -42,7 +42,11 @@ export class InjectableRegistry {
   }
 
 
-  createLazyPropertyGetter(target: any, key: string | symbol, factory: NoArgsFunction | SingleArgFunction, passInstance?: boolean): NoArgsFunction {
+  public createLazyPropertyGetter(
+    target: any,
+    key: string | symbol,
+    factory: NoArgsFunction | SingleArgFunction, passInstance?: boolean
+  ): NoArgsFunction {
     return function(this: typeof target) {
 
       if (this === target || this.constructor && this.constructor.prototype === this)
@@ -55,10 +59,10 @@ export class InjectableRegistry {
       });
 
       return instance;
-    }
+    };
   }
 
-  instanciate(cls: NoArgsConstructor) {
+  public instanciate(cls: NoArgsConstructor) {
     if (this.instances.has(cls))
       return this.instances.get(cls)!;
     const instance = new cls();
@@ -66,11 +70,11 @@ export class InjectableRegistry {
     return instance;
   }
 
-  hasInjectable(id: symbol) {
+  public hasInjectable(id: symbol) {
     return !!this.injectables[id as any];
   }
 
-  getInjectableMeta(dep: any) {
+  public getInjectableMeta(dep: any) {
     const id = getId(dep);
 
     if (!this.hasInjectable(id))
@@ -79,10 +83,9 @@ export class InjectableRegistry {
     return this.injectables[id as any];
   }
 
-  register(id: symbol, injectable: InjectableProperties) {
+  public register(id: symbol, injectable: InjectableProperties) {
     this.injectables[id as any] = injectable;
   }
-
 
 }
 

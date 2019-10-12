@@ -17,6 +17,7 @@
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
   "devDependencies": {
+    "tslint": "^5.20.0",
     "ttypescript": "^1.5.7",
     "typescript": "^3.6.3",
     "typescript-transform-paths": "^1.1.10"

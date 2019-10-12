@@ -4,26 +4,25 @@ import {FunctionBuilder} from "@propero/propulsion-core";
 
 
 export function optimizeRequestHeaders(map: RequestHeaders): RequestHeaderCondition {
-  if (typeof map == "function") return map;
+  if (typeof map === "function") return map;
 
   const args: RequestHeaderValueCondition[] = [];
 
-  let b = new FunctionBuilder().arg<Record<RequestHeaderKey, RequestHeaderValue>>("headers");
+  const b = new FunctionBuilder().arg<Record<RequestHeaderKey, RequestHeaderValue>>("headers");
 
   Object.entries(map).forEach(([key, value]) => {
     const keyStr = JSON.stringify(key.toLowerCase());
     const valStr = JSON.stringify(value);
     if (typeof value === "boolean")
       b.body(value ? `if (!(${keyStr} in headers)) return false` : `if (${keyStr} in headers) return false`);
-    else if (typeof value == "string" || typeof value == "number")
+    else if (typeof value === "string" || typeof value === "number")
       b.body(`if (!(${keyStr} in headers) || (headers[${keyStr}].trim() !== ${valStr})) return false`);
-    else if (typeof value == "function") {
+    else if (typeof value === "function") {
       b.arg<RequestHeaderValueCondition>(`f${args.length}`);
       b.body(`if (!(${keyStr} in headers) || !f${args.length}(headers[${keyStr})) return false`);
       args.push(value);
-    } else {
+    } else
       b.body(`if (!(${keyStr} in headers) || !${valStr}.contains(headers[${keyStr}].trim()) return false`);
-    }
   });
   b.body("return true");
 

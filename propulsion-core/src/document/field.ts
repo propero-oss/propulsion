@@ -17,7 +17,7 @@ export function Field(data?: FieldMeta) {
       newData.type = type;
     pushFieldDef(target.constructor, key);
     Reflect.defineMetadata(FIELD, newData, target, key);
-  }
+  };
 }
 
 export function pushFieldDef(target: NoArgsConstructor, key: string | symbol) {

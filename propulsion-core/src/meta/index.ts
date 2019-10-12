@@ -1,1 +1,1 @@
-export * from "@/meta/document"
+export * from "@/meta/document";

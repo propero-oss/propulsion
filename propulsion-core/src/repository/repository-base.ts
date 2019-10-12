@@ -42,7 +42,7 @@ export abstract class RepositoryBase<T, F extends keyof T, ID extends T[F]> impl
 
 
   public describe() { return Document.getMeta(this.cls); }
-  public type() { return this.cls; };
+  public type() { return this.cls; }
 
 
   protected fetchToCountOptions(options?: FetchOptions<T>): FetchOptions<T> {

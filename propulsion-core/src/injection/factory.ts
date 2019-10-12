@@ -17,11 +17,12 @@ function Factory<T = any>(opts: FactoryOptions<T> = {}) {
       throw new Error("Factory methods must be static");
     registerFactory(opts, desc.value!.bind(target));
     return desc;
-  }
+  };
 }
 
 function registerFactory(opts: FactoryOptions, factory: SingleArgFunction | NoArgsFunction) {
-  let {constructs: id, multiInstance, passInstance} = opts;
+  const {multiInstance, passInstance} = opts;
+  let {constructs: id} = opts;
   if (id == null)
     throw new Error("Undefined injectable type for factory, please provide constructs option");
   if (typeof id !== "symbol")

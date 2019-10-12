@@ -3,7 +3,7 @@ import {Injectables} from "@/injection/injectables";
 
 
 export function Inject(dep?: any) {
-  return function (target: any, key: string | symbol) {
+  return function(target: any, key: string | symbol) {
 
     if (!dep)
       dep = Reflect.getMetadata("design:type", target, key);
@@ -14,5 +14,5 @@ export function Inject(dep?: any) {
     return Object.defineProperty(target, key, {
       get: Injectables.createGetter(target, key, dep)
     });
-  }
+  };
 }

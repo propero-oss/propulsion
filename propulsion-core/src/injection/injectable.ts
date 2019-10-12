@@ -10,11 +10,11 @@ export function Injectable(id?: any) {
 
     Injectables.register(id, {
       cls: target,
-      id: id,
+      id,
     });
 
     return target;
-  }
+  };
 }
 
 export function MultiInjectable(id?: any) {
@@ -27,11 +27,11 @@ export function MultiInjectable(id?: any) {
 
     Injectables.register(id, {
       cls: target,
-      id: id,
+      id,
       multiInstance: true
     });
 
     return target;
-  }
+  };
 }
 

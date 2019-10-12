@@ -7,7 +7,7 @@ export type DocumentMeta<T = any> = {
   meta?: {
     title?: string;
     desc?: string;
-  }
+  };
 };
 
 export function Document(data?: Omit<DocumentMeta, "fields">) {
@@ -18,7 +18,7 @@ export function Document(data?: Omit<DocumentMeta, "fields">) {
     fieldNames.forEach(name => fields[name] = Reflect.getMetadata(FIELD, prototype, name));
     Reflect.defineMetadata(DOCUMENT, {...data, fields}, target);
     return target;
-  }
+  };
 }
 
 Document.getMeta = function<T extends NoArgsConstructor>(target: T): DocumentMeta<T> {

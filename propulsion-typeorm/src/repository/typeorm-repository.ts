@@ -11,7 +11,7 @@ import {Connection, Repository, Brackets, FindManyOptions, FindOneOptions, Selec
 export type TypeormExtraOptions<T> = {
   findOne?: FindOneOptions<T>;
   findMany?: FindManyOptions<T>;
-}
+};
 
 export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends RepositoryBase<T, F, ID> {
 
@@ -44,7 +44,7 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     return q.getMany();
   }
 
-  public async findAllAndCount(options?:FetchOptions<T>): Promise<{count: number, data: T[]}> {
+  public async findAllAndCount(options?: FetchOptions<T>): Promise<{count: number, data: T[]}> {
     const q = this.repo.createQueryBuilder("it").select();
     this.applyFetchOptions(q, options);
     const [data, count] = await q.getManyAndCount();
@@ -177,8 +177,8 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     );
   }
 
-  protected buildWhere(filter: Filter<T>) : [string | Brackets, any?] {
-    switch(filter.op) {
+  protected buildWhere(filter: Filter<T>): [string | Brackets, any?] {
+    switch (filter.op) {
 
       case "and":             return [this.buildAndBracket(filter.filters)];
       case "or":              return [this.buildOrBracket(filter.filters)];

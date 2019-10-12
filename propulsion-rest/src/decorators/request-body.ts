@@ -5,7 +5,7 @@ import {TFunction} from "@propero/propulsion-core";
 
 
 export function RequestBody(parser: string | BodyParser) {
-  const parse: BodyParser = typeof parser == "string" ? getParser(parser) : parser;
+  const parse: BodyParser = typeof parser === "string" ? getParser(parser) : parser;
 
   return function(target: any, key: string | symbol, desc: TypedPropertyDescriptor<TFunction>) {
     const { value: orig } = desc;
@@ -15,5 +15,5 @@ export function RequestBody(parser: string | BodyParser) {
     };
 
     return desc;
-  }
+  };
 }

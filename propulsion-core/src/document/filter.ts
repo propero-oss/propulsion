@@ -10,11 +10,16 @@ import {
   TextOperator
 } from "@/types";
 
-const textFilterMapper       = (op: TextOperator)       => <T>(filter: TextFilter<T>)       => ({ op, field: filter.field, value: filter.value });
-const setFilterMapper        = (op: SetOperator)        => <T>(filter: SetFilter<T>)        => ({ op, field: filter.field, items: filter.items });
-const comparisonFilterMapper = (op: ComparisonOperator) => <T>(filter: ComparisonFilter<T>) => ({ op, field: filter.field, value: filter.value });
-const setValueFilterMapper   = (op: SetValueOperator)   => <T>(filter: SetValueFilter<T>)   => ({ op, field: filter.field });
-const proximityFilterMapper   = (op: ProximityOperator)   => <T>(filter: ProximityFilter<T>)   => ({ op, field: filter.field, origin: filter.origin, distance: filter.distance });
+const textFilterMapper       = (op: TextOperator) => <T>(filter: TextFilter<T>) =>
+  ({ op, field: filter.field, value: filter.value });
+const setFilterMapper        = (op: SetOperator) => <T>(filter: SetFilter<T>) =>
+  ({ op, field: filter.field, items: filter.items });
+const comparisonFilterMapper = (op: ComparisonOperator) => <T>(filter: ComparisonFilter<T>) =>
+  ({ op, field: filter.field, value: filter.value });
+const setValueFilterMapper   = (op: SetValueOperator) => <T>(filter: SetValueFilter<T>) =>
+  ({ op, field: filter.field });
+const proximityFilterMapper  = (op: ProximityOperator) => <T>(filter: ProximityFilter<T>) =>
+  ({ op, field: filter.field, origin: filter.origin, distance: filter.distance });
 
 const negations: Record<FilterOperator | string, any> = {
   "and": (filter: LogicalSetFilter) => ({ op: "or",  filters: filter.filters.map(Filters.negate) }),

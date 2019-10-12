@@ -8,7 +8,7 @@ import {CommonRequestHeaderMap, RequestHeaders, StandardRequestHeaderMap} from "
 
 
 export function normalizeRequestHeaders(map: RequestHeaders): RequestHeaders {
-  if (typeof map == "function") return map;
+  if (typeof map === "function") return map;
   return Object.entries(map).map(([key, value]) => {
     if (key in StandardRequestHeaderMap)
     // @ts-ignore

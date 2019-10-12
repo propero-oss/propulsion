@@ -16,7 +16,7 @@ export type Tuple<TUPLE extends [...any[]]> =
  */
 export type TuplePush<TUPLE extends [...any[]], ELEMENT> =
   ((...r: TuplePushType<TUPLE, ELEMENT>) => void) extends (...a: infer R) => any
-    ? R : never
+    ? R : never;
 
 /**
  * Forces Array Types into Tuples and adds ELEMENT to the end
@@ -24,7 +24,7 @@ export type TuplePush<TUPLE extends [...any[]], ELEMENT> =
  */
 export type TuplePop<TUPLE extends [...any[]]> =
   ((...r: TuplePopType<TUPLE>) => void) extends (...a: infer R) => any
-    ? R : never
+    ? R : never;
 
 /**
  * Forces Array Types into Tuples and adds ELEMENT to the front
@@ -32,7 +32,7 @@ export type TuplePop<TUPLE extends [...any[]]> =
  */
 export type TupleUnshift<TUPLE extends [...any[]], ELEMENT> =
   ((...r: TupleUnshiftType<TUPLE, ELEMENT>) => void) extends (...a: infer R) => any
-    ? R : never
+    ? R : never;
 
 /**
  * Forces Array Types into Tuples and removes the first element
@@ -40,4 +40,4 @@ export type TupleUnshift<TUPLE extends [...any[]], ELEMENT> =
  */
 export type TupleShift<TUPLE extends [...any[]]> =
   ((...r: TupleShiftType<TUPLE>) => void) extends (...a: infer R) => any
-    ? R : never
+    ? R : never;

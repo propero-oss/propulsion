@@ -22,12 +22,15 @@
     "only-arrow-functions": false,
     "arrow-parens": [true, "ban-single-arg-parens"],
     "no-shadowed-variable": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "array-type": [true, "array"],
+    "interface-over-type-literal": false
   },
   "linterOptions": {
     "exclude": [
       "dist/**/*",
-      "test/**/*"
+      "test/**/*",
+      "**/_*"
     ]
   }
 }

@@ -4,7 +4,7 @@ const toUpperCase: ((val: string) => string) = String.prototype.toUpperCase.call
 
 export function normalizeRequestMethods(methods: RequestMethods): RequestMethod[] {
   if (methods == null) return Object.values(StandardHttpMethodMap);
-  if (typeof methods == "string")
+  if (typeof methods === "string")
     return [methods.toUpperCase()];
   if (Array.isArray(methods))
     return methods.map(toUpperCase);

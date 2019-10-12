@@ -3,18 +3,18 @@ import {FetchOptions, NoSuchElement, RepositoryBase, SingleFetchOptions, Unsuppo
 import {Filter, NoArgsConstructor, Sorter} from "@/types";
 
 function nextId() {
-  const date = ("000000000000"+(+new Date()).toString(16)).substr(-12);
-  const incr = ("00" + (++nextId.current).toString(16)).substr(-2);
-  const rand = ("00" + (Math.random() * 0xFF).toString(16)).substr(-2);
+  const date = (`000000000000${(+new Date()).toString(16)}`).substr(-12);
+  const incr = (`00${(++nextId.current).toString(16)}`).substr(-2);
+  const rand = (`00${(Math.random() * 0xFF).toString(16)}`).substr(-2);
   return date + incr + rand;
 }
 nextId.current = 0;
 
 export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> extends RepositoryBase<T, F, ID> {
 
-  constructor(cls: NoArgsConstructor<T>, id: F) { super(cls, id); }
-
   protected state: Map<ID, T> = new Map<ID, T>();
+
+  constructor(cls: NoArgsConstructor<T>, id: F) { super(cls, id); }
 
   public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
     let result = this.state.get(id);

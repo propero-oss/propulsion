@@ -7,7 +7,7 @@ export function getId(object: any): symbol {
 }
 
 function createId(object: any) {
-  const id = Symbol(typeof object == "function" && object.name || JSON.stringify(object));
+  const id = Symbol(typeof object === "function" && object.name || JSON.stringify(object));
   ID_MAP.set(object, id);
   return id;
 }

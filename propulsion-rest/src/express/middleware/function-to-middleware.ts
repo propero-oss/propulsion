@@ -13,7 +13,7 @@ export function functionToMiddleware(fn: TFunction): MiddlewareFunction {
     } catch (ex) {
       next(ex);
     }
-  }
+  };
 }
 
 

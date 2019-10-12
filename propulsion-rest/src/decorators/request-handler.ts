@@ -9,7 +9,7 @@ import {TFunction} from "@propero/propulsion-core";
 
 export function RequestHandler(options?: string | HandlerOptions) {
   if (!options) options = {};
-  if (typeof options == "string")
+  if (typeof options === "string")
     options = { path: options };
 
   const normalized = normalizeOptions(options);
@@ -18,7 +18,7 @@ export function RequestHandler(options?: string | HandlerOptions) {
 
   return function(target: any, key: string | symbol, desc: TypedPropertyDescriptor<TFunction>) {
     Reflect.defineMetadata(REQUEST_HANDLER, {options, normalized}, target, key);
-    
+
     const {value: orig} = desc;
 
     desc.value = function(this: typeof target, req: Request, res: Response, next: NextFunction) {
@@ -32,7 +32,7 @@ export function RequestHandler(options?: string | HandlerOptions) {
     };
 
     return desc;
-  }
+  };
 }
 
 
