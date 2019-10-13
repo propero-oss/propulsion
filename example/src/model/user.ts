@@ -24,4 +24,13 @@ export class User {
 
   @Field()
   firstName?: string;
+
+  @Field({
+    relation: {
+      type: "1:1",
+      target: () => User,
+      toField: "id"
+    }
+  })
+  creator!: User;
 }

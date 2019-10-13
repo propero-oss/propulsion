@@ -1,16 +1,18 @@
 import {FIELD, FIELDS} from "@/meta";
 import {Constructor, NoArgsConstructor} from "@/types";
+import {Relation} from "@/document/meta/relation";
 
 export type FieldMeta = {
   type?: Constructor<any>;
   meta?: {
     title?: string;
     desc?: string;
-  }
+  },
+  relation?: Relation<any, any>;
 };
 
 export function Field(data?: FieldMeta, scope: string = "main") {
-  return function(target: InstanceType<NoArgsConstructor>, key: string | symbol) {
+  return function<T extends InstanceType<NoArgsConstructor> = any>(target: T, key: string | symbol) {
     const newData: FieldMeta = {...data};
     const type = Reflect.getMetadata("design:type", target, key);
     if (type != null && newData.type == null)

@@ -1,5 +1,12 @@
 import {Document, Filters} from "@/document";
-import {FetchOptions, NoSuchElement, RepositoryBase, SingleFetchOptions, UnsupportedOperation} from "@/repository";
+import {
+  FetchOptions,
+  NoSuchElement,
+  RelationOptions,
+  RepositoryBase,
+  SingleFetchOptions,
+  UnsupportedOperation
+} from "@/repository";
 import {Filter, NoArgsConstructor, Sorter} from "@/types";
 
 function nextId() {
@@ -22,25 +29,29 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
       throw new NoSuchElement(`No element found for id ${id}`);
 
     if (options && options.fields)
-      [result] = this.transformFields([result], options.fields);
+      [result] = this.transformFields([result], options.fields, options.relations);
 
     return result;
   }
 
   public async findAll(options?: FetchOptions<T>): Promise<T[]> {
-    const {fields, filter, skip, sort, top} = {...options};
+    const {fields, filter, skip, sort, top, relations} = {...options};
 
     let entries = [...this.state.values()];
 
     if (filter)
       entries = this.filterEntries(entries, filter);
     if (fields)
-      entries = this.transformFields(entries, fields);
+      entries = this.transformFields(entries, fields, relations);
+    if (relations)
+      entries = this.fetchRelations(entries, relations);
     if (sort)
       entries = this.sortEntries(entries, sort);
 
+
     return entries.slice(skip, top);
   }
+
 
   public async count(options?: FetchOptions<T>): Promise<number> {
     return (await this.findAll(this.fetchToCountOptions(options))).length;
@@ -82,11 +93,20 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
     return entries.sort(this.createSorterFunction(Array.isArray(sorters) ? sorters : [sorters]));
   }
 
-  protected transformFields(entries: T[], fields: (keyof T)[]): T[] {
-    return entries.map(entry => fields.reduce((data, field) => ({...data, [field]: entry[field]}), {} as Partial<T>) as T);
+  protected transformFields(entries: T[], fields: (keyof T)[], relations?: RelationOptions<T>): T[]
+  {
+    const relationFields = Object.keys(relations || {}) as (keyof T)[];
+    const totalFields = [...fields, ...relationFields];
+    return entries.map(entry => totalFields.reduce((data, field) => ({...data, [field]: entry[field]}), {} as Partial<T>) as T);
+  }
+
+  private fetchRelations(entries: T[], relations: RelationOptions<T>): T[] {
+    const fields = this.describe().fields;
+    return [];
   }
 
   protected filterEntries(entries: T[], filter: Filter<T> | Filter<T>[]) {
+
     if (Array.isArray(filter)) filter = { op: "and", filters: filter };
     return entries.filter(this.createFilterFunction(filter));
   }
@@ -146,4 +166,5 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
         throw new UnsupportedOperation(`${filter.op} filter operator not supported`);
     }
   }
+
 }
