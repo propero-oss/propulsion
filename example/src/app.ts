@@ -48,7 +48,7 @@ export class SomeController {
   @RequestBody("json")
   private async updateUserInfo(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json(await this.repo.update(req.param("id", ID), req.body));
+      res.json(await this.repo.updateOne(req.params.id || ID as any, req.body));
     } catch (ex) {
       next(ex);
     }
@@ -56,3 +56,20 @@ export class SomeController {
 }
 
 getRestApp().listen(3000, () => console.log(`https://localhost:3000/`));
+
+type Nullish = undefined | null;
+type NonNullMember<T, M extends keyof T> = {
+  [K in keyof T]: K extends M ? Exclude<T[K], Nullish> : T[K];
+}
+
+function assertMemberNonNull<T, F extends keyof T>(it: T, member: F): it is NonNullMember<T, F> {
+  return it[member] != null;
+}
+
+const x: NonNullMember<{
+  someKey?: string;
+}, "someKey"> = {};
+
+if (assertMemberNonNull(x, "someKey")) {
+  console.log(x.someKey.toLocaleString());
+}
