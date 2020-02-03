@@ -9,7 +9,7 @@ export interface ReadOnlyRepository<T, F extends keyof T, ID extends T[F] = T[F]
     findAllAndCount(options?: FetchOptions<T>): Promise<{count: number, data: T[]}>;
     count(options?: FetchOptions<T>): Promise<number>;
 
-    describe(): DocumentMeta<NoArgsConstructor<T>>;
+    describe(scope?: string): DocumentMeta<NoArgsConstructor<T>>;
     type(): NoArgsConstructor<T>;
 }
 

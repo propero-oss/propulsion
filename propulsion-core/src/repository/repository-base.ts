@@ -41,7 +41,7 @@ export abstract class RepositoryBase<T, F extends keyof T, ID extends T[F]> impl
   }
 
 
-  public describe() { return Document.getMeta(this.cls); }
+  public describe(scope: string = "main") { return Document.getMeta(this.cls, scope); }
   public type() { return this.cls; }
 
 

@@ -4,7 +4,6 @@ import {RequestHandler, Controller, RequestBody, Request, Response, NextFunction
 
 const ID = "me";
 
-
 @Controller("/api/users")
 export class SomeController {
 

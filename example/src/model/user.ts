@@ -1,6 +1,6 @@
-import {Document, Field} from "@propero/propulsion-core";
+import {Scope, Document, Field} from "@propero/propulsion-core";
 
-
+const Ui = new Scope("ui");
 
 @Document({
   meta: {
@@ -17,9 +17,11 @@ export class User {
   username!: string;
 
   @Field()
+  @Ui.Field({ display: false })
   password!: string;
 
   @Field()
+  @Ui.Field({ variant: "email" })
   email!: string;
 
   @Field()

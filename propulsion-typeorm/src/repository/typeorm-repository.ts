@@ -29,8 +29,6 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     return this.connection().getRepository(this.cls);
   }
 
-
-
   public async findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T> {
     const result = await this.repo.findOne(id, options && this.convertSingleFetchOptions(options));
     if (!result)
@@ -58,17 +56,13 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     return q.getCount();
   }
 
-
-
-
-
   public async createOne(entity: Partial<T>): Promise<T> {
     const instance = Document.create(this.cls, entity);
     return await this.repo.save(instance);
   }
 
   public async createMany(entities: Partial<T>[]): Promise<T[]> {
-    const instances = entities.map(Document.create.bind(Document, this.cls));
+    const instances = entities.map(entity => Document.create(this.cls, entity));
     return await this.repo.save(instances);
   }
 
@@ -89,7 +83,7 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
   }
 
   public async updateMany(entities: Partial<T>[], partialUpdate: boolean): Promise<T[]> {
-    const updates = entities.map(Document.create.bind(Document, this.cls));
+    const updates = entities.map(entity => Document.create(this.cls, entity));
 
     if (!partialUpdate)
       return this.repo.save(updates);
@@ -97,8 +91,7 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
     const ids = updates.map(one => one[this.id] as ID);
     const originals = await this.findMany(ids);
 
-    originals.forEach(one => this.repo.merge(one, updates.find(update => update[this.id] === one[this.id])));
-
+    originals.forEach(one => this.repo.merge(one, updates.find(update => update[this.id] === one[this.id])!));
     return this.repo.save(originals);
   }
 
@@ -110,7 +103,6 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
   public async deleteMany(ids: ID[]): Promise<void> {
     return this.repo.delete(ids as any[]).then(() => undefined);
   }
-
 
   protected applyFetchOptions(q: SelectQueryBuilder<T>, options?: FetchOptions<T>) {
     const {top, skip, sort, filter, fields} = {...options};
@@ -142,7 +134,6 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
   protected applyFetchOptionSkip(q: SelectQueryBuilder<T>, skip: number) {
     q.skip(skip);
   }
-
 
   protected convertSingleFetchOptions(options?: SingleFetchOptions<T>): FindOneOptions<T> {
     const {fields: select} = {...options};
@@ -179,7 +170,6 @@ export class TypeormRepository<T, F extends keyof T, ID extends T[F]> extends Re
 
   protected buildWhere(filter: Filter<T>): [string | Brackets, any?] {
     switch (filter.op) {
-
       case "and":             return [this.buildAndBracket(filter.filters)];
       case "or":              return [this.buildOrBracket(filter.filters)];
       case "not":             return this.buildWhere(Filters.negate(filter.filter));

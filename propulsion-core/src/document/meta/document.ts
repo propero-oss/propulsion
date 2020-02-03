@@ -32,3 +32,8 @@ Document.create = function<T extends NoArgsConstructor>(cls: T, data?: Partial<I
   Object.assign(document, data);
   return document;
 };
+
+Document.builder = function<T extends NoArgsConstructor>(cls: T, scope: string = "main"):
+  (data?: Partial<InstanceType<T>>) => InstanceType<T> {
+  return data => Document.create(cls, data, scope);
+};
