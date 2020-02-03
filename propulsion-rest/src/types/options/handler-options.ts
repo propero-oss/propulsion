@@ -1,13 +1,10 @@
-import {MethodCondition, RequestHeaderCondition, RequestHeaders, RequestMethods} from "@/types";
-
-
+import { MethodCondition, RequestHeaderCondition, RequestHeaders, RequestMethods } from "@/types";
 
 export interface HandlerOptions {
   path?: string;
   headers?: RequestHeaders;
   method?: RequestMethods;
 }
-
 
 export interface ProcessedHandlerOptions {
   headers?: RequestHeaderCondition;

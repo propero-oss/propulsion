@@ -1,0 +1,42 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore --ext .ts .",
+    "lint:fix": "eslint --ignore-path .gitignore --ext .ts --fix ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@microsoft/api-documenter": "^7.7.12",
+    "@rocketbase/rollup-plugin-api-extractor": "^1.0.3",
+    "@rocketbase/rollup-plugin-exec": "^1.0.1",
+    "@rocketbase/rollup-plugin-sequential": "^1.0.0",
+    "@types/jest": "^25.1.1",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.7.0",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@wessberg/rollup-plugin-ts": "^1.2.15",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "jest-preset-typescript": "^1.2.0",
+    "lerna": "^3.20.2",
+    "lint-staged": "^10.0.7",
+    "lodash": "^4.17.15",
+    "prettier": "^1.19.1",
+    "rollup": "^1.31.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.5.0",
+    "rollup-plugin-ts-paths": "^1.0.3",
+    "ts-jest": "^25.1.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}

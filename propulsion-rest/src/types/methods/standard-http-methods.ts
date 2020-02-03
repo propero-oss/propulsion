@@ -1,8 +1,3 @@
-
-
-export type StandardHttpMethod = StandardHttpMethodMapType[StandardHttpMethodNames];
-export type StandardHttpMethodNames = keyof StandardHttpMethodMapType;
-export type StandardHttpMethodMapType = typeof StandardHttpMethodMap;
 export const StandardHttpMethodMap = {
   get: "GET",
   head: "HEAD",
@@ -14,3 +9,6 @@ export const StandardHttpMethodMap = {
   trace: "TRACE",
   patch: "PATCH"
 };
+export type StandardHttpMethodMapType = typeof StandardHttpMethodMap;
+export type StandardHttpMethodNames = keyof StandardHttpMethodMapType;
+export type StandardHttpMethod = StandardHttpMethodMapType[StandardHttpMethodNames];

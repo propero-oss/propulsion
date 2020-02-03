@@ -1,14 +1,12 @@
-import {TuplePush} from "@/types";
+import { TuplePush } from "@/types";
 
 export class FunctionBuilder<THIS = any, ARGS extends unknown[] = []> {
-
   private currentBody: string[] = [];
   private currentArgs: string[] = [];
 
   public arg<ARG>(arg: string): FunctionBuilder<THIS, TuplePush<ARGS, ARG>> {
     this.currentArgs.push(arg);
-    // @ts-ignore
-    return this;
+    return this as any;
   }
 
   public body(statement: string): this {
@@ -17,7 +15,6 @@ export class FunctionBuilder<THIS = any, ARGS extends unknown[] = []> {
   }
 
   public build<RETURN>(): (this: THIS, ...args: ARGS) => RETURN {
-    // @ts-ignore
-    return new Function(...this.currentArgs, this.currentBody.join(";"));
+    return new Function(...this.currentArgs, this.currentBody.join(";")) as any;
   }
 }

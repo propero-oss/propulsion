@@ -2,26 +2,30 @@
   "name": "@propero/propulsion-core",
   "version": "0.0.0",
   "description": "Propulsion Framework Core",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/PropulsionCore.cjs.js",
+  "module": "dist/PropulsionCore.esm.js",
+  "unpkg": "dist/PropulsionCore.js",
+  "types": "dist/PropulsionCore.d.ts",
+  "since": "2019",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "gen:types": "node ./build/generate-types.js",
-    "build": "ttsc"
+    "test": "jest"
   },
   "keywords": [
-    "propero",
     "propulsion",
-    "framework"
+    "framework",
+    "propero",
+    "core"
   ],
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
-  "devDependencies": {
-    "tslint": "^5.20.0",
-    "ttypescript": "^1.5.7",
-    "typescript": "^3.6.3",
-    "typescript-transform-paths": "^1.1.10"
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/propero-oss/propulsion.git"
   },
+  "bugs": {
+    "url": "https://github.com/propero-oss/propulsion/issues"
+  },
+  "homepage": "https://github.com/propero-oss/propulsion#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.13"
   }

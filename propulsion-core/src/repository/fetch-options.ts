@@ -1,8 +1,10 @@
-import {Filter, Sorter, ExcludeKeys, Simple, Single} from "@/types";
+import { Filter, Sorter, ExcludeKeys, Simple, Single } from "@/types";
 
-export type RelationOption<T> = {
-  fields?: (keyof T)[];
-} | true;
+export type RelationOption<T> =
+  | {
+      fields?: (keyof T)[];
+    }
+  | true;
 
 export type RelationOptions<T> = {
   [K in ExcludeKeys<T, Simple>]?: RelationOption<Single<T[K]>>;

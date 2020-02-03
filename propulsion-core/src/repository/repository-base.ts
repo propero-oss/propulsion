@@ -1,13 +1,9 @@
-import {Document} from "@/document";
-import {FetchOptions, Repository, SingleFetchOptions} from "@/repository";
-import {NoArgsConstructor} from "@/types";
+import { Document } from "@/document";
+import { FetchOptions, Repository, SingleFetchOptions } from "@/repository";
+import { NoArgsConstructor } from "@/types";
 
 export abstract class RepositoryBase<T, F extends keyof T, ID extends T[F]> implements Repository<T, F, ID> {
-
-  protected constructor(
-    protected cls: NoArgsConstructor<T>,
-    protected id: F,
-  ) {}
+  protected constructor(protected cls: NoArgsConstructor<T>, protected id: F) {}
 
   public abstract count(options?: FetchOptions<T>): Promise<number>;
   public abstract findOne(id: ID, options?: SingleFetchOptions<T>): Promise<T>;
@@ -17,15 +13,14 @@ export abstract class RepositoryBase<T, F extends keyof T, ID extends T[F]> impl
   public abstract updateOne(entity: Partial<T>, partialUpdate: boolean): Promise<T>;
   public abstract deleteOne(id: ID): Promise<void>;
 
-
   public async findMany(ids: ID[], options?: SingleFetchOptions<T>): Promise<T[]> {
     return Promise.all(ids.map(id => this.findOne(id, options)));
   }
 
-  public async findAllAndCount(options?: FetchOptions<T>): Promise<{count: number, data: T[]}> {
+  public async findAllAndCount(options?: FetchOptions<T>): Promise<{ count: number; data: T[] }> {
     const count = await this.count(this.fetchToCountOptions(options));
     const data = await this.findAll(options);
-    return {data, count};
+    return { data, count };
   }
 
   public async createMany(entities: Partial<T>[]): Promise<T[]> {
@@ -40,13 +35,15 @@ export abstract class RepositoryBase<T, F extends keyof T, ID extends T[F]> impl
     return Promise.all(ids.map(id => this.deleteOne(id))).then(() => undefined);
   }
 
-
-  public describe(scope: string = "main") { return Document.getMeta(this.cls, scope); }
-  public type() { return this.cls; }
-
+  public describe() {
+    return Document.getMeta(this.cls);
+  }
+  public type() {
+    return this.cls;
+  }
 
   protected fetchToCountOptions(options?: FetchOptions<T>): FetchOptions<T> {
-    const opts: FetchOptions<T> = {...options};
+    const opts: FetchOptions<T> = { ...options };
     delete opts.top;
     delete opts.skip;
     opts.fields = [this.id];

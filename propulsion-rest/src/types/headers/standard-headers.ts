@@ -1,6 +1,3 @@
-export type StandardRequestHeaderName = StandardRequestHeaderMapType[keyof StandardRequestHeaderMapType];
-export type StandardRequestHeaderNameShort = keyof StandardRequestHeaderMapType;
-export type StandardRequestHeaderMapType = typeof StandardRequestHeaderMap;
 export const StandardRequestHeaderMap = {
   aIm: "A-IM",
   accept: "Accept",
@@ -42,3 +39,6 @@ export const StandardRequestHeaderMap = {
   via: "Via",
   warning: "Warning"
 };
+export type StandardRequestHeaderMapType = typeof StandardRequestHeaderMap;
+export type StandardRequestHeaderName = StandardRequestHeaderMapType[keyof StandardRequestHeaderMapType];
+export type StandardRequestHeaderNameShort = keyof StandardRequestHeaderMapType;

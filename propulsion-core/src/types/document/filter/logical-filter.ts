@@ -1,4 +1,4 @@
-import {Filter} from "@/types";
+import { Filter } from "@/types";
 
 export type LogicalOperator = "and" | "or" | "not";
 

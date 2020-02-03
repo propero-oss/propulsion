@@ -1,7 +1,7 @@
-import {RepositoryError} from "@/repository/error";
+import { RepositoryError } from "@/repository/error/repository-error";
 
 export class UnsupportedOperation extends RepositoryError {
-  constructor(message: string = "Unsupported Operation") {
+  constructor(message = "Unsupported Operation") {
     super(message);
   }
 }

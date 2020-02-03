@@ -5,4 +5,3 @@ export * from "@/injection/injectable";
 export * from "@/injection/injectable-properties";
 export * from "@/injection/injectables";
 export * from "@/injection/instance";
-

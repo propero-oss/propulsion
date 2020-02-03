@@ -1,32 +1,38 @@
 {
   "compilerOptions": {
-    "incremental": true,
     "target": "es6",
-    "module": "commonjs",
-    "lib": ["esnext"],
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "module": "esnext",
     "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "plugins": [
-      { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclarations": true }
-    ]
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "lib",
+    "declaration": true,
+    "types": [
+      "jest"
+    ],
+    "lib": [
+      "esnext"
+    ],
+    "paths": {
+      "src/*": ["src/*"],
+      "@/*": ["src/*"],
+      "tests/*": ["tests/*"]
+    }
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules/**/*",
-    "build/**/*",
-    "dist/**/*"
+    "node_modules"
   ]
 }

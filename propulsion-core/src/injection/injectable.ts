@@ -1,16 +1,14 @@
-import {getId, Injectables} from "@/injection";
+import { getId } from "@/injection/id";
+import { Injectables } from "@/injection/injectables";
 
 export function Injectable(id?: any) {
   return function(target: any) {
-
-    if (!id)
-      id = getId(target);
-    else if (typeof id !== "symbol")
-      id = getId(id);
+    if (!id) id = getId(target);
+    else if (typeof id !== "symbol") id = getId(id);
 
     Injectables.register(id, {
       cls: target,
-      id,
+      id
     });
 
     return target;
@@ -19,11 +17,8 @@ export function Injectable(id?: any) {
 
 export function MultiInjectable(id?: any) {
   return function(target: any) {
-
-    if (!id)
-      id = getId(target);
-    else if (typeof id !== "symbol")
-      id = getId(id);
+    if (!id) id = getId(target);
+    else if (typeof id !== "symbol") id = getId(id);
 
     Injectables.register(id, {
       cls: target,
@@ -34,4 +29,3 @@ export function MultiInjectable(id?: any) {
     return target;
   };
 }
-

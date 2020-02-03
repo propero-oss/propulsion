@@ -1,7 +1,3 @@
-
-
 export class RepositoryError {
-  constructor(
-    public message: string = "Internal Repository Error"
-  ) {}
+  constructor(public message: string = "Internal Repository Error") {}
 }

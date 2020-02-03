@@ -1,5 +1,3 @@
-import {TFunction} from "@/types";
+import { TFunction } from "@/types";
 
-
-
-export interface MethodDescriptor<FN extends TFunction = typeof Function> extends TypedPropertyDescriptor<FN> {}
+export type MethodDescriptor<FN extends TFunction> = TypedPropertyDescriptor<FN>;

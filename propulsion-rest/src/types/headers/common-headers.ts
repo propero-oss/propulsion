@@ -1,6 +1,3 @@
-export type CommonRequestHeaderName = CommonRequestHeaderMapType[keyof CommonRequestHeaderMapType];
-export type CommonRequestHeaderNameShort = keyof CommonRequestHeaderMapType;
-export type CommonRequestHeaderMapType = typeof CommonRequestHeaderMap;
 export const CommonRequestHeaderMap = {
   upgradeInsecureRequests: "Upgrade-Insecure-Requests",
   xRequestedWith: "X-Requested-With",
@@ -19,3 +16,6 @@ export const CommonRequestHeaderMap = {
   xCorrelationId: "X-Correlation-ID",
   saveData: "Save-Data"
 };
+export type CommonRequestHeaderMapType = typeof CommonRequestHeaderMap;
+export type CommonRequestHeaderNameShort = keyof CommonRequestHeaderMapType;
+export type CommonRequestHeaderName = CommonRequestHeaderMapType[keyof CommonRequestHeaderMapType];

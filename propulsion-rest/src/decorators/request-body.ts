@@ -1,8 +1,7 @@
-import {joinMiddleware} from "@/express";
-import {getParser} from "@/parser";
-import {BodyParser} from "@/types";
-import {TFunction} from "@propero/propulsion-core";
-
+import { joinMiddleware } from "@/express";
+import { getParser } from "@/parser";
+import { BodyParser } from "@/types";
+import { TFunction } from "@propero/propulsion-core";
 
 export function RequestBody(parser: string | BodyParser) {
   const parse: BodyParser = typeof parser === "string" ? getParser(parser) : parser;

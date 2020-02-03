@@ -1,32 +1,28 @@
 {
   "name": "@propero/propulsion-rest",
   "version": "0.0.0",
-  "description": "Propulsion Framework Rest",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "Propulsion Framework Rest Module",
+  "main": "dist/PropulsionRest.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ttsc",
-    "dev": "ttsc && node dist/index.js"
+    "test": "jest"
   },
   "keywords": [
+    "propulsion",
+    "framework",
     "propero",
-    "propulsioon",
-    "framework"
+    "rest"
   ],
   "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
-  "devDependencies": {
-    "@types/express": "^4.17.1",
-    "@types/node": "^12.7.11",
-    "tslint": "^5.20.0",
-    "ttypescript": "^1.5.7",
-    "typescript": "^3.6.3",
-    "typescript-transform-paths": "^1.1.10"
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/propero-oss/propulsion.git"
   },
+  "bugs": {
+    "url": "https://github.com/propero-oss/propulsion/issues"
+  },
+  "homepage": "https://github.com/propero-oss/propulsion#readme",
   "dependencies": {
-    "@propero/propulsion-core": "file:../propulsion-core",
-    "express": "^4.17.1",
-    "reflect-metadata": "^0.1.13"
+    "@propero/propulsion-core": "0.0.0"
   }
 }

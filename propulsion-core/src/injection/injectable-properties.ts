@@ -1,6 +1,4 @@
-import {NoArgsConstructor, NoArgsFunction, SingleArgFunction} from "@/types";
-
-
+import { NoArgsConstructor, NoArgsFunction, SingleArgFunction } from "@/types";
 
 export interface InjectableProperties {
   factory?: NoArgsFunction | SingleArgFunction;
@@ -10,4 +8,3 @@ export interface InjectableProperties {
   multiInstance?: boolean;
   id?: symbol;
 }
-

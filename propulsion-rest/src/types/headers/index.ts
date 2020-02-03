@@ -1,13 +1,16 @@
-import {CommonRequestHeaderNameShort, CommonRequestHeaderName} from "@/types/headers/common-headers";
-import {StandardRequestHeaderName, StandardRequestHeaderNameShort} from "@/types/headers/standard-headers";
+import { CommonRequestHeaderNameShort, CommonRequestHeaderName } from "@/types/headers/common-headers";
+import { StandardRequestHeaderName, StandardRequestHeaderNameShort } from "@/types/headers/standard-headers";
 
 export * from "@/types/headers/common-headers";
 export * from "@/types/headers/standard-headers";
 
 export type CustomRequestHeaderName = string;
 
-export type RequestHeaderKey = StandardRequestHeaderName | StandardRequestHeaderNameShort
-  | CommonRequestHeaderName | CommonRequestHeaderNameShort
+export type RequestHeaderKey =
+  | StandardRequestHeaderName
+  | StandardRequestHeaderNameShort
+  | CommonRequestHeaderName
+  | CommonRequestHeaderNameShort
   | CustomRequestHeaderName;
 
 export type RequestHeaderValue = string | string[] | number | number[] | boolean | RequestHeaderValueCondition;

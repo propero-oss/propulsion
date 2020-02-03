@@ -1,0 +1,25 @@
+{
+  "name": "@propero/propulsion-orm",
+  "version": "0.0.0",
+  "description": "Propulsion Framework Orm",
+  "main": "dist/PropulsionOrm.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "propulsion",
+    "framework",
+    "propero",
+    "orm"
+  ],
+  "author": "Propero Team <team@propero.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/propero-oss/propulsion.git"
+  },
+  "bugs": {
+    "url": "https://github.com/propero-oss/propulsion/issues"
+  },
+  "homepage": "https://github.com/propero-oss/propulsion#readme"
+}
