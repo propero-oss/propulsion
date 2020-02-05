@@ -1,12 +1,5 @@
 import { FilterProcessor } from "@/filter/parser/filter-parser-types";
-import {
-  eqProcessor,
-  geProcessor,
-  gtProcessor,
-  leProcessor,
-  ltProcessor,
-  neProcessor
-} from "@/filter/parser/processor/comparison-filter-processor";
+import { eqProcessor, geProcessor, gtProcessor, leProcessor, ltProcessor, neProcessor } from "@/filter/parser/processor/comparison-filter-processor";
 import { andProcessor, notProcessor, orProcessor } from "@/filter/parser/processor/logical-filter-processor";
 import { closeToProcessor, farFromProcessor } from "@/filter/parser/processor/proximity-filter-processor";
 import { inProcessor, notInProcessor, notNullProcessor, nullProcessor } from "@/filter/parser/processor/set-filter-processor";
@@ -58,6 +51,4 @@ export const defaultProcessors: FilterProcessor[] = [
   notEndsWithProcessor
 ];
 
-export const defaultProcessorMap: Record<string, FilterProcessor> = fromPairs(
-  defaultProcessors.map(processor => [processor.operator, processor])
-);
+export const defaultProcessorMap: Record<string, FilterProcessor> = fromPairs(defaultProcessors.map(processor => [processor.operator, processor]));

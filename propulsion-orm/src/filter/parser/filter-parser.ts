@@ -1,14 +1,7 @@
 import { InvalidArgumentsError, UnsupportedOperation } from "@/error";
 import { Filter } from "@/filter";
 import { defaultProcessors } from "@/filter/parser/processor";
-import {
-  TOKEN_PARAMS_START,
-  TOKEN_PARAMS_END,
-  TOKEN_PARAMS_SEPARATOR,
-  FilterParserToken,
-  UnprocessedFilter,
-  FilterProcessor
-} from "./filter-parser-types";
+import { TOKEN_PARAMS_START, TOKEN_PARAMS_END, TOKEN_PARAMS_SEPARATOR, FilterParserToken, UnprocessedFilter, FilterProcessor } from "./filter-parser-types";
 import { fromPairs, escapeRegExp } from "lodash";
 
 export class FilterParser {

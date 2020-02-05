@@ -1,16 +1,5 @@
 import { Filter, TextFilter, TextOperator } from "@/filter/types";
-import {
-  contains,
-  endsWith,
-  like,
-  matches,
-  notContains,
-  notEndsWith,
-  notLike,
-  notMatches,
-  notStartsWith,
-  startsWith
-} from "@/filter/helper";
+import { contains, endsWith, like, matches, notContains, notEndsWith, notLike, notMatches, notStartsWith, startsWith } from "@/filter/helper";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function textFilterProcessor(
