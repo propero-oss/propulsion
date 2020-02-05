@@ -1,4 +1,5 @@
-import { Filter, inValues, isNull, notInValues, notNull, SetFilter, SetOperator, SetValueFilter, SetValueOperator } from "@/filter";
+import { Filter, SetFilter, SetOperator, SetValueFilter, SetValueOperator } from "@/filter/types";
+import { inValues, isNull, notInValues, notNull } from "@/filter/helper";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function setFilterProcessor(

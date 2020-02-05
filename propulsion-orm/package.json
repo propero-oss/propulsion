@@ -4,7 +4,8 @@
   "description": "Propulsion Framework Orm",
   "main": "dist/PropulsionOrm.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "rollup -c rollup.config.js"
   },
   "keywords": [
     "propulsion",

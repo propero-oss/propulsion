@@ -1,5 +1,5 @@
-import { Filter, LogicalNotFilter, LogicalOperator, LogicalSetFilter, not } from "@/filter";
-import { and, or } from "@/filter/helper/logical-filter";
+import { Filter, LogicalNotFilter, LogicalOperator, LogicalSetFilter } from "@/filter/types";
+import { and, or, not } from "@/filter/helper";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function logicalSetFilterProcessor(

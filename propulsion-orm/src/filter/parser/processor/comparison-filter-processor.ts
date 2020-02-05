@@ -1,4 +1,5 @@
-import { ComparisonFilter, ComparisonOperator, eq, Filter, ge, gt, le, lt, ne } from "@/filter";
+import { eq, ge, gt, le, lt, ne } from "@/filter/helper";
+import { ComparisonFilter, ComparisonOperator, Filter } from "@/filter/types";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function comparisonFilterProcessor(

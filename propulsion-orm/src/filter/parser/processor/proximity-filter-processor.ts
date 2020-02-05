@@ -1,4 +1,5 @@
-import { closeTo, farFrom, Filter, ProximityFilter, ProximityOperator } from "@/filter";
+import { Filter, ProximityFilter, ProximityOperator } from "@/filter/types";
+import { closeTo, farFrom } from "@/filter/helper";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function proximityFilterProcessor(
