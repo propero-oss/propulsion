@@ -1,11 +1,13 @@
-import { closeTo, farFrom, Filter, ProximityFilter } from "@/filter";
+import { closeTo, farFrom, Filter, ProximityFilter, ProximityOperator } from "@/filter";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function proximityFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: ProximityOperator,
   helper: <T, F>(field: F, origin: F extends keyof T ? T[F] : any, distance: number) => ProximityFilter<T, F>
 ): FilterProcessor<ProximityFilter<any, any>> {
   return {
+    alias,
     operator,
     validateParams(...params): boolean {
       return params.length >= 2 && params.length <= 3 && !!params.find(it => typeof it !== "string");
@@ -19,5 +21,5 @@ export function proximityFilterProcessor(
   };
 }
 
-export const closeToProcessor = proximityFilterProcessor("closeTo", closeTo);
-export const farFromProcessor = proximityFilterProcessor("farFrom", farFrom);
+export const closeToProcessor = proximityFilterProcessor("closeTo", "close-to", closeTo);
+export const farFromProcessor = proximityFilterProcessor("farFrom", "far-from", farFrom);

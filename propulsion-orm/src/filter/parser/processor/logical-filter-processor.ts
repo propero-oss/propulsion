@@ -1,13 +1,15 @@
-import { Filter, LogicalNotFilter, LogicalSetFilter, not } from "@/filter";
+import { Filter, LogicalNotFilter, LogicalOperator, LogicalSetFilter, not } from "@/filter";
 import { and, or } from "@/filter/helper/logical-filter";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function logicalSetFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: LogicalOperator,
   helper: (filters: Filter[]) => LogicalSetFilter
 ): FilterProcessor<LogicalSetFilter> {
   return {
     operator,
+    alias,
     validateParams(...params): boolean {
       return !!params.find(it => typeof it === "string");
     },
@@ -20,10 +22,11 @@ export function logicalSetFilterProcessor(
   };
 }
 
-export const andProcessor = logicalSetFilterProcessor("and", and);
-export const orProcessor = logicalSetFilterProcessor("or", or);
+export const andProcessor = logicalSetFilterProcessor("and", "and", and);
+export const orProcessor = logicalSetFilterProcessor("or", "or", or);
 export const notProcessor: FilterProcessor<LogicalNotFilter> = {
   operator: "not",
+  alias: "not",
   validateParams(...params: (string | UnprocessedFilter)[]): boolean {
     return params.length === 1 && typeof params[0] !== "string";
   },

@@ -1,11 +1,13 @@
-import { Filter, inValues, isNull, notInValues, notNull, SetFilter, SetValueFilter } from "@/filter";
+import { Filter, inValues, isNull, notInValues, notNull, SetFilter, SetOperator, SetValueFilter, SetValueOperator } from "@/filter";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function setFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: SetOperator,
   helper: <T, F>(field: F, items: (F extends keyof T ? T[F] : any)[]) => SetFilter<T, F>
 ): FilterProcessor<SetFilter<any, any>> {
   return {
+    alias,
     operator,
     validateParams(...params): boolean {
       return params.length > 1 && !params.find(it => typeof it !== "string");
@@ -22,10 +24,12 @@ export function setFilterProcessor(
 }
 
 export function setValueFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: SetValueOperator,
   helper: <F>(field: F) => SetValueFilter<F>
 ): FilterProcessor<SetValueFilter<any>> {
   return {
+    alias,
     operator,
     validateParams(...params): boolean {
       return params.length === 1 && typeof params[0] === "string";
@@ -39,7 +43,7 @@ export function setValueFilterProcessor(
   };
 }
 
-export const inProcessor = setFilterProcessor("in", inValues);
-export const notInProcessor = setFilterProcessor("notIn", notInValues);
-export const nullProcessor = setValueFilterProcessor("isNull", isNull);
-export const notNullProcessor = setValueFilterProcessor("notNull", notNull);
+export const inProcessor = setFilterProcessor("in", "in", inValues);
+export const notInProcessor = setFilterProcessor("notIn", "not-in", notInValues);
+export const nullProcessor = setValueFilterProcessor("isNull", "null", isNull);
+export const notNullProcessor = setValueFilterProcessor("notNull", "not-null", notNull);

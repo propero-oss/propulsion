@@ -1,11 +1,14 @@
-import { ComparisonFilter, eq, Filter, ge, gt, le, lt, ne } from "@/filter";
+import { ComparisonFilter, ComparisonOperator, eq, Filter, ge, gt, le, lt, ne } from "@/filter";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function comparisonFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: ComparisonOperator,
   builder: <T, K>(field: K, value: K extends keyof T ? T[K] : any) => ComparisonFilter<T, K>
 ): FilterProcessor<ComparisonFilter<any>> {
   return {
+    operator,
+    alias,
     process(next: (raw: UnprocessedFilter) => Filter, ...params: (string | UnprocessedFilter)[]): ComparisonFilter<any> {
       return builder(params[0], params[1]);
     },
@@ -14,14 +17,13 @@ export function comparisonFilterProcessor(
     },
     validateParams(...params: (string | UnprocessedFilter)[]): boolean {
       return params.length === 2 && typeof params[0] === "string" && typeof params[1] === "string";
-    },
-    operator
+    }
   };
 }
 
-export const ltProcessor = comparisonFilterProcessor("lt", lt);
-export const gtProcessor = comparisonFilterProcessor("gt", gt);
-export const leProcessor = comparisonFilterProcessor("le", le);
-export const geProcessor = comparisonFilterProcessor("ge", ge);
-export const eqProcessor = comparisonFilterProcessor("eq", eq);
-export const neProcessor = comparisonFilterProcessor("ne", ne);
+export const ltProcessor = comparisonFilterProcessor("lt", "lt", lt);
+export const gtProcessor = comparisonFilterProcessor("lt", "lt", gt);
+export const leProcessor = comparisonFilterProcessor("lt", "lt", le);
+export const geProcessor = comparisonFilterProcessor("lt", "lt", ge);
+export const eqProcessor = comparisonFilterProcessor("lt", "lt", eq);
+export const neProcessor = comparisonFilterProcessor("lt", "lt", ne);

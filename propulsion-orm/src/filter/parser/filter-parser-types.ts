@@ -1,4 +1,4 @@
-import { Filter } from "@/filter";
+import { Filter, FilterOperator } from "@/filter";
 
 export const TOKEN_PARAMS_START = Symbol("TOKEN_PARAMS_START");
 export const TOKEN_PARAMS_END = Symbol("TOKEN_PARAMS_END");
@@ -11,7 +11,8 @@ export interface UnprocessedFilter {
 }
 
 export interface FilterProcessor<T extends Filter = any> {
-  operator: string;
+  operator: FilterOperator;
+  alias: string;
   validateParams(...params: (string | UnprocessedFilter)[]): boolean;
   process(next: (raw: UnprocessedFilter) => Filter, ...params: (string | UnprocessedFilter)[]): T;
   serializeParams(next: (filter: Filter) => string, filter: T): string[];

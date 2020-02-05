@@ -9,7 +9,7 @@ import {
   UnprocessedFilter,
   FilterProcessor
 } from "./filter-parser-types";
-import { fromPairs } from "lodash";
+import { fromPairs, escapeRegExp } from "lodash";
 
 export class FilterParser {
   static readonly TOKEN_PARAMS_START = TOKEN_PARAMS_START;
@@ -18,8 +18,10 @@ export class FilterParser {
 
   protected readonly tokenLookup: Record<string, FilterParserToken>;
   protected readonly processorMap: Record<string, FilterProcessor>;
+  protected readonly processorAliasMap: Record<string, FilterProcessor>;
+  protected readonly escapingRegExp: RegExp;
 
-  constructor(
+  public constructor(
     protected paramsStartChar = "(",
     protected paramsEndChar = ")",
     protected paramsSeparatorChar = ",",
@@ -31,7 +33,23 @@ export class FilterParser {
       [paramsEndChar]: TOKEN_PARAMS_END,
       [paramsSeparatorChar]: TOKEN_PARAMS_SEPARATOR
     };
-    this.processorMap = fromPairs(processors.map(it => [it.operator, it]));
+    this.escapingRegExp = this.buildEscapingRegExp();
+    this.processorMap = this.buildProcessorMap();
+    this.processorAliasMap = this.buildProcessorAliasMap();
+  }
+
+  protected buildProcessorMap() {
+    return fromPairs(this.processors.map(it => [it.operator, it]));
+  }
+
+  protected buildProcessorAliasMap() {
+    return fromPairs(this.processors.map(it => [it.alias, it]));
+  }
+
+  protected buildEscapingRegExp() {
+    const { paramsStartChar, paramsEndChar, paramsSeparatorChar, escapeChar } = this;
+    const escaped = escapeRegExp(`${paramsStartChar}${paramsEndChar}${paramsSeparatorChar}${escapeChar}`);
+    return new RegExp(`[${escaped}]`, "g");
   }
 
   protected tokenize(raw: string): (string | FilterParserToken)[] {
@@ -80,7 +98,7 @@ export class FilterParser {
 
   protected process(raw: UnprocessedFilter): Filter {
     const { params, op } = raw;
-    const processor = this.processorMap[op];
+    const processor = this.processorAliasMap[op];
     if (!processor) throw new UnsupportedOperation(`Unsupported filter operator: ${op}`);
     if (!processor.validateParams(...params)) throw new InvalidArgumentsError(`Invalid filter arguments for filter: ${op}`);
     return processor.process(this.process.bind(this), ...params);
@@ -90,5 +108,16 @@ export class FilterParser {
     const tokens = this.tokenize(filter);
     const segments = this.segment(tokens);
     return this.process(segments);
+  }
+
+  protected escape(str: string): string {
+    return str.replace(this.escapingRegExp, `${this.escapeChar}$0`);
+  }
+
+  public serialize(filter: Filter): string {
+    const { escape, serialize, paramsStartChar, paramsSeparatorChar, paramsEndChar, processorMap } = this;
+    const processor = processorMap[filter.op];
+    const [alias, ...params] = [processor.alias, ...processor.serializeParams(serialize.bind(this), filter)].map(escape.bind(this));
+    return [alias, paramsStartChar, params.join(paramsSeparatorChar), paramsEndChar].join("");
   }
 }

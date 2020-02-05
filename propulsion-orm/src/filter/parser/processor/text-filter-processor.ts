@@ -10,15 +10,17 @@ import {
   notMatches,
   notStartsWith,
   startsWith,
-  TextFilter
+  TextFilter, TextOperator
 } from "@/filter";
 import { FilterProcessor, UnprocessedFilter } from "@/filter/parser/filter-parser-types";
 
 export function textFilterProcessor(
-  operator: string,
+  alias: string,
+  operator: TextOperator,
   helper: <T, F>(field: F, value: string, ci: boolean) => TextFilter<T, F>
 ): FilterProcessor<TextFilter<any, any>> {
   return {
+    alias,
     operator,
     validateParams(...params): boolean {
       return params.length > 1 && params.length < 4 && !params.find(it => typeof it !== "string");
@@ -35,13 +37,13 @@ export function textFilterProcessor(
   };
 }
 
-export const containsProcessor = textFilterProcessor("contains", contains);
-export const notContainsProcessor = textFilterProcessor("notContains", notContains);
-export const matchProcessor = textFilterProcessor("matches", matches);
-export const notMatchProcessor = textFilterProcessor("notMatches", notMatches);
-export const likeProcessor = textFilterProcessor("like", like);
-export const notLikeProcessor = textFilterProcessor("notLike", notLike);
-export const startsWithProcessor = textFilterProcessor("startsWith", startsWith);
-export const notStartsWithProcessor = textFilterProcessor("notStartsWith", notStartsWith);
-export const endsWithProcessor = textFilterProcessor("endsWith", endsWith);
-export const notEndsWithProcessor = textFilterProcessor("notEndsWith", notEndsWith);
+export const containsProcessor = textFilterProcessor("contains", "contains", contains);
+export const notContainsProcessor = textFilterProcessor("notContains", "not-contains", notContains);
+export const matchProcessor = textFilterProcessor("matches", "match", matches);
+export const notMatchProcessor = textFilterProcessor("notMatches", "not-match", notMatches);
+export const likeProcessor = textFilterProcessor("like", "like", like);
+export const notLikeProcessor = textFilterProcessor("notLike", "not-like", notLike);
+export const startsWithProcessor = textFilterProcessor("startsWith", "starts-with", startsWith);
+export const notStartsWithProcessor = textFilterProcessor("notStartsWith", "not-starts-with", notStartsWith);
+export const endsWithProcessor = textFilterProcessor("endsWith", "ends-with", endsWith);
+export const notEndsWithProcessor = textFilterProcessor("notEndsWith", "not-ends-with", notEndsWith);
