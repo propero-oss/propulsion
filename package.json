@@ -47,8 +47,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix --ignore-path .gitignore --ext .ts",
-      "git add"
+      "eslint --fix --ignore-path .gitignore --ext .ts"
     ]
   }
 }
