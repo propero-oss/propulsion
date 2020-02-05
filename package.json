@@ -38,5 +38,17 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e -V",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix --ignore-path .gitignore --ext .ts",
+      "git add"
+    ]
   }
 }
