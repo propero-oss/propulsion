@@ -90,15 +90,7 @@ export class MemoryMapRepository<T, F extends keyof T, ID extends T[F] = T[F]> e
   protected createSorterFunction(sorters: Sorter<T, keyof T>[]) {
     return sorters
       .map(sorter => (data1: T, data2: T) =>
-        data1[sorter.field] > data2[sorter.field]
-          ? sorter.ascending
-            ? -1
-            : 1
-          : data1[sorter.field] < data2[sorter.field]
-          ? sorter.ascending
-            ? 1
-            : -1
-          : 0
+        data1[sorter.field] > data2[sorter.field] ? (sorter.ascending ? -1 : 1) : data1[sorter.field] < data2[sorter.field] ? (sorter.ascending ? 1 : -1) : 0
       )
       .reduce((first, second) => (data1: T, data2: T) => first(data1, data2) || second(data1, data2));
   }

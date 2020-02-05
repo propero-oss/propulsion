@@ -31,15 +31,9 @@ export class InjectableRegistry {
     throw new Error(`No injection schema defined for injectable ${String(dep)} (id: ${String(id)})`);
   }
 
-  public createLazyPropertyGetter(
-    target: any,
-    key: string | symbol,
-    factory: NoArgsFunction | SingleArgFunction,
-    passInstance?: boolean
-  ): NoArgsFunction {
+  public createLazyPropertyGetter(target: any, key: string | symbol, factory: NoArgsFunction | SingleArgFunction, passInstance?: boolean): NoArgsFunction {
     return function(this: typeof target) {
-      if (this === target || (this.constructor && this.constructor.prototype === this))
-        throw Error(`Cannot access injectable getters on prototypes`);
+      if (this === target || (this.constructor && this.constructor.prototype === this)) throw Error(`Cannot access injectable getters on prototypes`);
 
       const instance = passInstance ? (factory as SingleArgFunction)(this) : (factory as NoArgsFunction)();
 

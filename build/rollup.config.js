@@ -24,8 +24,8 @@ export default pkg => {
     external,
     plugins: [
       paths(),
-      ts({ tsconfig: "tsconfig.build.json" }),
       sourcemaps(),
+      ts({ tsconfig: "tsconfig.build.json" }),
       commonjs(),
       sequential(
         [
