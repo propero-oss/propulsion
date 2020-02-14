@@ -10,7 +10,7 @@ export type TextOperator =
   | "ends-with"
   | "not-ends-with";
 
-export interface TextFilter<T, F> {
+export interface TextFilter<T = any, F = any> {
   op: TextOperator;
   field: F;
   value: string;

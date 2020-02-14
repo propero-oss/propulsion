@@ -21,5 +21,13 @@
   "bugs": {
     "url": "https://github.com/propero-oss/propulsion/issues"
   },
-  "homepage": "https://github.com/propero-oss/propulsion#readme"
+  "homepage": "https://github.com/propero-oss/propulsion#readme",
+  "dependencies": {
+    "@propero/propulsion-core": "0.0.0",
+    "@propero/propulsion-orm": "0.0.0",
+    "pg": "^7.18.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^7.14.1"
+  }
 }

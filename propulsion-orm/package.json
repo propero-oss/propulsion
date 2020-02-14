@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "Propulsion Framework Orm",
   "main": "dist/PropulsionOrm.js",
+  "module": "dist/PropulsionOrm.esm.js",
+  "unpkg": "dist/PropulsionOrm.js",
+  "types": "dist/PropulsionOrm.d.ts",
+  "since": "2019",
   "scripts": {
     "test": "jest",
     "build": "rollup -c rollup.config.js"
